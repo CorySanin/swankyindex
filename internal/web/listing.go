@@ -1,7 +1,9 @@
 package web
 
 import (
-	"fmt"
+	"embed"
+	"html/template"
+	"log"
 	"net/http"
 	"os"
 	"path"
@@ -21,10 +23,30 @@ type FileEntry struct {
 	DLTotal  *int
 }
 
+type ListingData struct {
+	Path           string
+	Subdirectories []string
+	Files          []FileEntry
+	HideDownloads  bool
+}
+
+//go:embed templates/*
+var templateFS embed.FS
 var conf config.Conf
+var templates *template.Template
 
 func InitWeb(cfg config.Conf) {
 	conf = cfg
+	// templates = template.Must(template.ParseGlob(filepath.Join("internal", "web", "templates", "*.html")))
+	mytemplates := []string{"layout.html"}
+	for i, v := range mytemplates {
+		mytemplates[i] = path.Join("templates", v)
+	}
+	tmpl, err := template.ParseFS(templateFS, mytemplates...)
+	if err != nil {
+		log.Fatal(err)
+	}
+	templates = tmpl
 }
 
 func Handler(w http.ResponseWriter, r *http.Request) {
@@ -33,9 +55,18 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	destination := path.Join(*conf.Directory, r.URL.Path[1:])
-	if childDirs, _, err := getChildren(destination); err == nil {
-		fmt.Printf("\ndirs: %s", strings.Join(childDirs, ", "))
-		fmt.Fprintf(w, "found directory %s", r.URL.Path[1:])
+	if childDirs, childFiles, err := getChildren(destination); err == nil {
+		var data = ListingData{
+			Path:           r.URL.Path,
+			Subdirectories: childDirs,
+			Files:          childFiles,
+			HideDownloads:  *conf.HideDownloads,
+		}
+		if err := templates.ExecuteTemplate(w, "layout.html", data); err != nil {
+			http.Error(w, "Something went wrong", http.StatusInternalServerError)
+			log.Default().Print(err.Error())
+		}
+
 		return
 	} else if file, err := os.Open(destination); err == nil {
 		defer file.Close()
@@ -55,6 +86,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func apiHandler(w http.ResponseWriter, r *http.Request) {
+	// rpath = r.URL.Path[len("/api/v1/"):]
 	http.Error(w, "API not yet implemented", 404)
 }
 

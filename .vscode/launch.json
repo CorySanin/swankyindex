@@ -14,7 +14,8 @@
             "env": {
                 "CONFIG": "${workspaceRoot}/config.yml",
                 "DIRECTORY": "${workspaceRoot}/root/"
-            }
+            },
+            "cwd": "${workspaceRoot}"
         }
     ]
 }

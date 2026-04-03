@@ -4,14 +4,16 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/goccy/go-yaml"
 )
 
 type Conf struct {
-	Port      *int    `yaml:"port"`
-	Storage   *string `yaml:"storage"`
-	Directory *string `yaml:"directory"`
+	Port          *int    `yaml:"port"`
+	Storage       *string `yaml:"storage"`
+	Directory     *string `yaml:"directory"`
+	HideDownloads *bool   `yaml:"hideDownloads"`
 }
 
 func Config() Conf {
@@ -23,9 +25,10 @@ func Config() Conf {
 		log.Print(err)
 	}
 	return Conf{
-		Storage:   PopulateKey(cfg.Storage, "STORAGE", "downloadcount.db"),
-		Port:      PopulateKeyInt(cfg.Port, "PORT", 8080),
-		Directory: PopulateKey(cfg.Directory, "DIRECTORY", "/srv/http/"),
+		Storage:       PopulateKey(cfg.Storage, "STORAGE", "downloadcount.db"),
+		Port:          PopulateKeyInt(cfg.Port, "PORT", 8080),
+		Directory:     PopulateKey(cfg.Directory, "DIRECTORY", "/srv/http/"),
+		HideDownloads: PopulateKeyBool(cfg.HideDownloads, "HIDEDOWNLOADS", false),
 	}
 }
 
@@ -55,6 +58,18 @@ func PopulateKeyInt(fileCfg *int, envKey string, fallback int) *int {
 		if err == nil {
 			return &i
 		}
+	}
+	if fileCfg != nil {
+		return fileCfg
+	}
+	return &fallback
+}
+
+func PopulateKeyBool(fileCfg *bool, envKey string, fallback bool) *bool {
+	val, ok := os.LookupEnv(envKey)
+	if ok && val != "" {
+		var result = strings.ToLower(val) == "true" || val == "1"
+		return &result
 	}
 	if fileCfg != nil {
 		return fileCfg
