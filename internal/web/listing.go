@@ -57,11 +57,20 @@ func InitWeb(cfg config.Conf, st storage.Storage) {
 }
 
 func Handler(w http.ResponseWriter, r *http.Request) {
-	if strings.HasPrefix(r.URL.Path, "/api/v1/") {
+	if strings.HasPrefix(r.URL.Path, "/.api/v1/") {
 		apiHandler(w, r)
 		return
 	}
-	destination := path.Join(*conf.Directory, r.URL.Path[1:])
+	cDir, err := conf.GetDirectory()
+	if err != nil {
+		log.Fatalf("Get directory failed: %v", err)
+	}
+	destination := path.Join(cDir, r.URL.Path[1:])
+	if !strings.HasPrefix(destination, cDir) {
+		http.Error(w, "Something went wrong", http.StatusBadRequest)
+		log.Printf("User tried accessing %s but was denied.", destination)
+		return
+	}
 	if childDirs, childFiles, err := getChildren(destination); err == nil {
 		var data = ListingData{
 			Path:           r.URL.Path,
@@ -75,7 +84,6 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Something went wrong", http.StatusInternalServerError)
 			log.Default().Print(err.Error())
 		}
-
 		return
 	} else if file, err := os.Open(destination); err == nil {
 		defer file.Close()
@@ -103,7 +111,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func apiHandler(w http.ResponseWriter, r *http.Request) {
-	// rpath = r.URL.Path[len("/api/v1/"):]
+	// rpath = r.URL.Path[len("/.api/v1/"):]
 	http.Error(w, "API not yet implemented", 404)
 }
 

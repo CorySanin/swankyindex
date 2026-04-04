@@ -1,9 +1,11 @@
 package config
 
 import (
+	"errors"
 	"html/template"
 	"log"
 	"os"
+	"path"
 	"strconv"
 	"strings"
 
@@ -19,6 +21,7 @@ type Conf struct {
 	footer        string  `yaml:"footer"`
 	Heading       template.HTML
 	Footer        template.HTML
+	directory     string
 }
 
 func Config() Conf {
@@ -37,6 +40,16 @@ func Config() Conf {
 		Heading:       template.HTML(cfg.Heading),
 		Footer:        template.HTML(cfg.Footer),
 	}
+}
+
+func (cfg *Conf) GetDirectory() (string, error) {
+	if cfg.Directory == nil {
+		return "", errors.New("No directory set in config")
+	}
+	if cfg.directory == "" {
+		cfg.directory = path.Join(*cfg.Directory)
+	}
+	return cfg.directory, nil
 }
 
 func envOrDefault(key string, fallback string) string {
