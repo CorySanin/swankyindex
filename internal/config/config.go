@@ -1,6 +1,7 @@
 package config
 
 import (
+	"html/template"
 	"log"
 	"os"
 	"strconv"
@@ -14,6 +15,10 @@ type Conf struct {
 	Storage       *string `yaml:"storage"`
 	Directory     *string `yaml:"directory"`
 	HideDownloads *bool   `yaml:"hideDownloads"`
+	heading       string  `yaml:"heading"`
+	footer        string  `yaml:"footer"`
+	Heading       template.HTML
+	Footer        template.HTML
 }
 
 func Config() Conf {
@@ -29,6 +34,8 @@ func Config() Conf {
 		Port:          populateKeyInt(cfg.Port, "PORT", 8080),
 		Directory:     populateKey(cfg.Directory, "DIRECTORY", "/srv/http/"),
 		HideDownloads: populateKeyBool(cfg.HideDownloads, "HIDEDOWNLOADS", false),
+		Heading:       template.HTML(cfg.Heading),
+		Footer:        template.HTML(cfg.Footer),
 	}
 }
 

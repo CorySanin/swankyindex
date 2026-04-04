@@ -14,12 +14,13 @@ import (
 
 	"github.com/CorySanin/downloadcountlisting/internal/config"
 	"github.com/CorySanin/downloadcountlisting/pkg/storage"
+	"github.com/dustin/go-humanize"
 )
 
 type (
 	FileEntry struct {
 		Filename string
-		Size     int64
+		Size     string
 		Date     time.Time
 		DL       int
 		DLTotal  int
@@ -30,6 +31,8 @@ type (
 		Subdirectories []string
 		Files          []FileEntry
 		HideDownloads  bool
+		Heading        template.HTML
+		Footer         template.HTML
 	}
 )
 
@@ -65,6 +68,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 			Subdirectories: childDirs,
 			Files:          childFiles,
 			HideDownloads:  *conf.HideDownloads,
+			Heading:        conf.Heading,
+			Footer:         conf.Footer,
 		}
 		if err := templates.ExecuteTemplate(w, "layout.html", data); err != nil {
 			http.Error(w, "Something went wrong", http.StatusInternalServerError)
@@ -139,7 +144,7 @@ func getChildren(path string) ([]string, []FileEntry, error) {
 				Filename: v.Name(),
 			}
 			if info, err := v.Info(); err == nil {
-				fEntry.Size = info.Size()
+				fEntry.Size = humanize.IBytes(uint64(info.Size()))
 				fEntry.Date = info.ModTime()
 			}
 			if totalsMap != nil {

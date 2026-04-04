@@ -8,7 +8,8 @@
 </head>
 
 <body>
-    <h1>Index of {{.Path}}</h1>
+    {{.Heading}}
+    <h1>Index of <span id="path">{{.Path}}</span></h1>
     <table id="list">
         <thead>
             <tr>
@@ -46,21 +47,5 @@
             {{end}}
         </tbody>
     </table>
-    <footer>
-        <div id="footer">
-            <ul>
-                <li><a href="/">Mirror Root</a></li>
-                <li><a href="http://artixhnbzrty77wcrnv4a5ylx7ujro7w5ueopb6un6uxmc36lhnz2oid.onion">Onion Service</a>
-                </li>
-                <li><a
-                        href="http://artixmirror.i2p/?i2paddresshelper=bCBovZsxyolReVEaoszLAZvCXbboP~T01rroHvXMnCZsIGi9mzHKiVF5URqizMsBm8Jdtug~9PTWuuge9cycJmwgaL2bMcqJUXlRGqLMywGbwl226D~09Na66B71zJwmbCBovZsxyolReVEaoszLAZvCXbboP~T01rroHvXMnCZsIGi9mzHKiVF5URqizMsBm8Jdtug~9PTWuuge9cycJmwgaL2bMcqJUXlRGqLMywGbwl226D~09Na66B71zJwmbCBovZsxyolReVEaoszLAZvCXbboP~T01rroHvXMnCZsIGi9mzHKiVF5URqizMsBm8Jdtug~9PTWuuge9cycJmwgaL2bMcqJUXlRGqLMywGbwl226D~09Na66B71zJwmbCBovZsxyolReVEaoszLAZvCXbboP~T01rroHvXMnCZsIGi9mzHKiVF5URqizMsBm8Jdtug~9PTWuuge9cycJqORAjSBvHlu5P1JGnqwmDzxvz8qiJGhSxLjyJIKjCanBQAEAAcAAA==">Eepsite</a>
-                </li>
-                <li><a href="https://sanin.dev">Cory Sanin</a></li>
-                <li><a href="https://artixlinux.org/">Artix Linux</a></li>
-                <li><a href="https://packages.artixlinux.org/">Artix Packages</a></li>
-                <li><a href="https://archive2.artixlinux.org/">Package Archive</a></li>
-            </ul>
-        </div>
-    </footer>
-    <meta http-equiv="onion-location" content="http://artixhnbzrty77wcrnv4a5ylx7ujro7w5ueopb6un6uxmc36lhnz2oid.onion" />
+    {{.Footer}}
 </body>
