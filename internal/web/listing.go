@@ -42,7 +42,6 @@ var store storage.Storage
 func InitWeb(cfg config.Conf, st storage.Storage) {
 	conf = cfg
 	store = st
-	// templates = template.Must(template.ParseGlob(filepath.Join("internal", "web", "templates", "*.html")))
 	mytemplates := []string{"layout.html"}
 	for i, v := range mytemplates {
 		mytemplates[i] = path.Join("templates", v)
@@ -84,11 +83,15 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Disposition", "attachment; filename="+fileName)
 		w.Header().Set("Content-Type", r.Header.Get("Content-Type")) // TODO: set content-type accordingly
 		w.Header().Set("Content-Length", strconv.FormatInt(fileStat.Size(), 10))
-		http.ServeContent(w, r, fileName, fileStat.ModTime(), file)
-		store.IncrementDownload(storage.Download{
-			Path:     fp,
-			Filename: fileName,
-		})
+
+		rec := &responseWriterWithStatus{ResponseWriter: w}
+		http.ServeContent(rec, r, fileName, fileStat.ModTime(), file)
+		if rec.success() {
+			store.IncrementDownload(storage.Download{
+				Path:     fp,
+				Filename: fileName,
+			})
+		}
 		return
 	}
 	http.Error(w, "404 file not found", 404)
