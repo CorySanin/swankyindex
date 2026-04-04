@@ -1,0 +1,36 @@
+html {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    line-height: 2em;
+}
+
+h1, h2, h3, h4, h5, h6, .title {
+    margin-bottom: .25em;
+}
+
+h1, .title.is-1 {
+    font-size: 3.2em;
+}
+
+h2, .title.is-2 {
+    font-size: 2.45em
+}
+
+h3, .title.is-3 {
+    font-size: 2.1em
+}
+
+h4, .title.is-4 {
+    font-size: 1.9em
+}
+
+h5, .title.is-5 {
+    font-size: 1.55em
+}
+
+h6, .title.is-6 {
+    font-size: 1.28em
+}
+
+table {
+    line-height: 1.5em;
+}
