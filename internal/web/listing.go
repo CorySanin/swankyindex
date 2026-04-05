@@ -31,7 +31,7 @@ type (
 		Subdirectories []string
 		Files          []FileEntry
 		HideDownloads  bool
-		Styles         string
+		Styles         *string
 		Heading        template.HTML
 		Footer         template.HTML
 	}
@@ -72,13 +72,13 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		log.Printf("User tried accessing %s but was denied.", destination)
 		return
 	}
-	if childDirs, childFiles, err := getChildren(destination); err == nil {
+	if childDirs, childFiles, err := getChildren(destination, r.URL.Path != "/"); err == nil {
 		var data = ListingData{
 			Path:           r.URL.Path,
 			Subdirectories: childDirs,
 			Files:          childFiles,
 			HideDownloads:  *conf.HideDownloads,
-			Styles:         *conf.Styles,
+			Styles:         conf.Styles,
 			Heading:        conf.Heading,
 			Footer:         conf.Footer,
 		}
@@ -117,7 +117,7 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "API not yet implemented", 404)
 }
 
-func getChildren(path string) ([]string, []FileEntry, error) {
+func getChildren(path string, hasParent bool) ([]string, []FileEntry, error) {
 	ch := make(chan map[string]storage.Totals)
 	if !*conf.HideDownloads {
 		go store.GetTotalsByPath(path, ch)
@@ -126,8 +126,11 @@ func getChildren(path string) ([]string, []FileEntry, error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	var dirCount = 0
-	var fileCount = 0
+	dirCount := 0
+	if hasParent {
+		dirCount = 1
+	}
+	fileCount := 0
 	for _, v := range entires {
 		if v.IsDir() {
 			dirCount++
@@ -143,6 +146,11 @@ func getChildren(path string) ([]string, []FileEntry, error) {
 	var totalsMap map[string]storage.Totals = nil
 	if !*conf.HideDownloads {
 		totalsMap = <-ch
+	}
+
+	if hasParent {
+		childDirs[dirCount] = ".."
+		dirCount++
 	}
 
 	for _, v := range entires {

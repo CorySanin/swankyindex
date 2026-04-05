@@ -34,11 +34,11 @@ func Config() Conf {
 		log.Print(err)
 	}
 	return Conf{
-		Storage:       populateKey(cfg.Storage, "STORAGE", "downloadcount.db"),
-		Port:          populateKeyInt(cfg.Port, "PORT", 8080),
-		Directory:     populateKey(cfg.Directory, "DIRECTORY", "/srv/http/"),
-		HideDownloads: populateKeyBool(cfg.HideDownloads, "HIDEDOWNLOADS", false),
-		Styles:        populateKey(cfg.Styles, "STYLES", "styles.css"),
+		Storage:       populateKey(cfg.Storage, "STORAGE", new(string("downloadcount.db"))),
+		Port:          populateKeyInt(cfg.Port, "PORT", new(int(8080))),
+		Directory:     populateKey(cfg.Directory, "DIRECTORY", new(string("/srv/http/"))),
+		HideDownloads: populateKeyBool(cfg.HideDownloads, "HIDEDOWNLOADS", new(bool(false))),
+		Styles:        populateKey(cfg.Styles, "STYLES", nil),
 		Heading:       template.HTML(cfg.Heading),
 		Footer:        template.HTML(cfg.Footer),
 	}
@@ -62,7 +62,7 @@ func envOrDefault(key string, fallback string) string {
 	return fallback
 }
 
-func populateKey(fileCfg *string, envKey string, fallback string) *string {
+func populateKey(fileCfg *string, envKey string, fallback *string) *string {
 	val, ok := os.LookupEnv(envKey)
 	if ok {
 		return &val
@@ -70,10 +70,10 @@ func populateKey(fileCfg *string, envKey string, fallback string) *string {
 	if fileCfg != nil {
 		return fileCfg
 	}
-	return &fallback
+	return fallback
 }
 
-func populateKeyInt(fileCfg *int, envKey string, fallback int) *int {
+func populateKeyInt(fileCfg *int, envKey string, fallback *int) *int {
 	val, ok := os.LookupEnv(envKey)
 	if ok {
 		i, err := strconv.Atoi(val)
@@ -84,10 +84,10 @@ func populateKeyInt(fileCfg *int, envKey string, fallback int) *int {
 	if fileCfg != nil {
 		return fileCfg
 	}
-	return &fallback
+	return fallback
 }
 
-func populateKeyBool(fileCfg *bool, envKey string, fallback bool) *bool {
+func populateKeyBool(fileCfg *bool, envKey string, fallback *bool) *bool {
 	val, ok := os.LookupEnv(envKey)
 	if ok && val != "" {
 		var result = strings.ToLower(val) == "true" || val == "1"
@@ -96,5 +96,5 @@ func populateKeyBool(fileCfg *bool, envKey string, fallback bool) *bool {
 	if fileCfg != nil {
 		return fileCfg
 	}
-	return &fallback
+	return fallback
 }

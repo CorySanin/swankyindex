@@ -9,3 +9,53 @@
 html {
 	min-height: 100%;
 }
+
+body {
+	padding: 1em;
+	min-height: 100%;
+	box-sizing: border-box;
+}
+
+table {
+	width: 100%;
+
+	td,
+	th {
+		border: 1px solid;
+		text-align: left;
+		overflow-x: auto;
+		overflow-wrap: anywhere;
+		padding: 8px;
+
+		&.dlcount {
+			text-align: right;
+		}
+	}
+
+	th {
+		white-space: nowrap;
+	}
+}
+
+.navigation {
+	border: 1px solid;
+
+	ul {
+		list-style: none;
+
+		li,
+		li a {
+			display: inline-block;
+		}
+
+		li a {
+			line-height: 2.5em;
+			height: 2.5em;
+			padding: 0 10px;
+		}
+	}
+}
+
+.footer {
+	margin-top: 1.25em;
+}
