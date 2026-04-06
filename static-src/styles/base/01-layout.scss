@@ -22,14 +22,9 @@ table {
 	td,
 	th {
 		border: 1px solid;
-		text-align: left;
 		overflow-x: auto;
 		overflow-wrap: anywhere;
 		padding: 8px;
-
-		&.dlcount {
-			text-align: right;
-		}
 	}
 
 	th {
