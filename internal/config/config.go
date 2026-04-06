@@ -16,8 +16,9 @@ type Conf struct {
 	Port          *int    `yaml:"port"`
 	Storage       *string `yaml:"storage"`
 	Directory     *string `yaml:"directory"`
-	HideDownloads *bool   `yaml:"hideDownloads"`
 	Styles        *string `yaml:"styles"`
+	Icons         *bool   `yaml:"icons"`
+	HideDownloads *bool   `yaml:"hideDownloads"`
 	heading       string  `yaml:"heading"`
 	footer        string  `yaml:"footer"`
 	Heading       template.HTML
@@ -37,8 +38,9 @@ func Config() Conf {
 		Storage:       populateKey(cfg.Storage, "STORAGE", new(string("downloadcount.db"))),
 		Port:          populateKeyInt(cfg.Port, "PORT", new(int(8080))),
 		Directory:     populateKey(cfg.Directory, "DIRECTORY", new(string("/srv/http/"))),
+		Icons:         populateKeyBool(cfg.Icons, "ICONS", new(bool(true))),
 		HideDownloads: populateKeyBool(cfg.HideDownloads, "HIDEDOWNLOADS", new(bool(false))),
-		Styles:        populateKey(cfg.Styles, "STYLES", nil),
+		Styles:        populateKey(cfg.Styles, "STYLES", new(string("styles.css"))),
 		Heading:       template.HTML(cfg.Heading),
 		Footer:        template.HTML(cfg.Footer),
 	}

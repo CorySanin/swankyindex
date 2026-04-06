@@ -5,7 +5,8 @@
     <title>Directory Listing</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/.static/css/styles.css">
+    <link rel="stylesheet" href="/.static/css/base.css">
+    {{if .Icons }}<link rel="stylesheet" href="/.static/css/icons/styles.css">{{end}}
     {{if ne .Styles nil }}<link rel="stylesheet" href="/.static/css/{{.Styles}}">{{end}}
 </head>
 

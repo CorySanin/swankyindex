@@ -1,0 +1,458 @@
+td.link a {
+    &[href]::before {
+        content: "\E23A";
+        display: inline-block;
+        vertical-align: middle;
+        margin: 0 5px 0 0;
+
+        font-family: "Phosphor";
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        line-height: 1;
+        letter-spacing: 0;
+        speak: never;
+        -webkit-font-feature-settings: "liga";
+        -moz-font-feature-settings: "liga=1";
+        -moz-font-feature-settings: "liga";
+        -ms-font-feature-settings: "liga" 1;
+        font-feature-settings: "liga";
+        -webkit-font-variant-ligatures: discretionary-ligatures;
+        font-variant-ligatures: discretionary-ligatures;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
+
+td.link.link a {
+    &[href$="/"]::before {
+        content: "\E24A";
+    }
+
+    &[href$="../"]::before {
+        content: "\E08E";
+    }
+
+    &[href~="MD5"],
+    &[href~="SHA1"],
+    &[href~="SHA256"],
+    &[href$=".md5"],
+    &[href$=".sha1"],
+    &[href$=".sha256"],
+    &[href$=".pgp"],
+    &[href$=".asc"],
+    &[href$=".sig"] {
+        &::before {
+            content: "\E2FE";
+        }
+    }
+
+    &[href$=".zip"],
+    &[href$=".7z"],
+    &[href$=".rar"],
+    &[href$=".tar"],
+    &[href$=".tar.zst"],
+    &[href$=".xz"],
+    &[href$=".txz"],
+    &[href$=".tgz"],
+    &[href$=".gz"],
+    &[href$=".bz2"],
+    &[href$=".tbz2"] {
+        &::before {
+            content: "\EB2A";
+        }
+    }
+
+    &[href$=".bin"],
+    &[href$=".cue"],
+    &[href$=".iso"] {
+        &::before {
+            content: "\E564";
+        }
+    }
+
+    &[href$=".deb"],
+    &[href$=".rpm"],
+    &[href$=".xap"],
+    &[href$=".dmg"] {
+        &::before {
+            content: "\E390";
+        }
+    }
+
+    &[href$=".apk"] {
+        &::before {
+            content: "\E008";
+        }
+    }
+
+    &[href$=".db"],
+    &[href$=".sqlite"] {
+        &::before {
+            content: "\E1DE";
+        }
+    }
+
+    &[href$=".files"] {
+        &::before {
+            content: "\E00C";
+        }
+    }
+
+    &[href$=".csv"] {
+        &::before {
+            content: "\EB1C";
+        }
+    }
+
+    &[href$=".ini"] {
+        &::before {
+            content: "\EB32";
+        }
+    }
+
+    &[href$=".json"],
+    &[href$=".yaml"],
+    &[href$=".yml"] {
+        &::before {
+            content: "\E860";
+        }
+    }
+
+    &[href$=".sql"] {
+        &::before {
+            content: "\ED4E";
+        }
+    }
+
+    &[href$=".reg"] {
+        &::before {
+            content: "\E692";
+        }
+    }
+
+    &[href$=".xml"] {
+        &::before {
+            content: "\E1BC";
+        }
+    }
+
+    &[href$=".old"] {
+        &::before {
+            content: "\E4A6";
+        }
+    }
+
+    &[href$=".chm"] {
+        &::before {
+            content: "\E3E8";
+        }
+    }
+
+    &[href$=".epub"],
+    &[href$=".mobi"] {
+        &::before {
+            content: "\E0E2";
+        }
+    }
+
+    &[href$=".pdf"] {
+        &::before {
+            content: "\E702";
+        }
+    }
+
+    &[href$=".txt"] {
+        &::before {
+            content: "\E348";
+        }
+    }
+
+    &[href$="robots.txt"] {
+        &::before {
+            content: "\E762";
+        }
+    }
+
+    &[href~="README"],
+    &[href$=".rtf"] {
+        &::before {
+            content: "\E23A";
+        }
+    }
+
+    &[href$=".doc"] {
+        &::before {
+            content: "\EB1E";
+        }
+    }
+
+    &[href$=".docx"],
+    &[href$=".docm"],
+    &[href$=".dotx"] {
+        &::before {
+            content: "\EB6A";
+        }
+    }
+
+    &[href$=".xls"] {
+        &::before {
+            content: "\EB22";
+        }
+    }
+
+    &[href$=".xlsx"],
+    &[href$=".xlsm"],
+    &[href$=".xlsb"],
+    &[href$=".xltx"] {
+        &::before {
+            content: "\EB6C";
+        }
+    }
+
+    &[href$=".ppt"] {
+        &::before {
+            content: "\EB20";
+        }
+    }
+
+    &[href$=".pptx"],
+    &[href$=".pptm"],
+    &[href$=".potx"],
+    &[href$=".potm"] {
+        &::before {
+            content: "\EACE";
+        }
+    }
+
+    &[href$=".torrent"] {
+        &::before {
+            content: "\E232";
+        }
+    }
+
+    &[href~="CHANGELOG"] {
+        &::before {
+            content: "\E2F2";
+        }
+    }
+
+    &[href~="INSTALL"] {
+        &::before {
+            content: "\E20A";
+        }
+    }
+
+    &[href~="LICENSE"] {
+        &::before {
+            content: "\E54A";
+        }
+    }
+
+    &[href~="COPYING"] {
+        &::before {
+            content: "\E1CA";
+        }
+    }
+
+    &[href$=".nfo"],
+    &[href$=".diz"] {
+        &::before {
+            content: "\E2CE";
+        }
+    }
+
+    &[href$=".flac"],
+    &[href$=".mp1"],
+    &[href$=".mp2"],
+    &[href$=".mp3"],
+    &[href$=".wav"],
+    &[href$=".ogg"],
+    &[href$=".oga"],
+    &[href$=".mogg"],
+    &[href$=".opus"],
+    &[href$=".wma"],
+    &[href$=".aac"],
+    &[href$=".aiff"],
+    &[href$=".alac"],
+    &[href$=".ra"],
+    &[href$=".au"],
+    &[href$=".m4a"] {
+        &::before {
+            content: "\EA20";
+        }
+    }
+
+    &[href$=".bmp"],
+    &[href$=".gif"],
+    &[href$=".jpg"],
+    &[href$=".jpeg"],
+    &[href$=".png"],
+    &[href$=".webp"],
+    &[href$=".avif"],
+    &[href$=".heif"],
+    &[href$=".tiff"],
+    &[href$=".jxl"],
+    &[href$=".ico"] {
+        &::before {
+            content: "\E2CC";
+        }
+    }
+
+    &[href$=".svg"] {
+        &::before {
+            content: "\ED08";
+        }
+    }
+
+    &[href$=".psd"],
+    &[href$=".xcf"],
+    &[href$=".kra"] {
+        &::before {
+            content: "\EA24";
+        }
+    }
+
+    &[href$=".rv"],
+    &[href$=".avi"],
+    &[href$=".flv"],
+    &[href$=".mkv"],
+    &[href$=".mov"],
+    &[href$=".webm"],
+    &[href$=".ogv"],
+    &[href$=".wmv"],
+    &[href$=".mp4"],
+    &[href$=".m4p"],
+    &[href$=".m4v"] {
+        &::before {
+            content: "\EA22";
+        }
+    }
+
+    &[href$=".sh"] {
+        &::before {
+            content: "\EAE8";
+        }
+    }
+
+    &[href$=".cpp"] {
+        &::before {
+            content: "\EB2E";
+        }
+    }
+
+    &[href$=".hpp"],
+    &[href$=".h"] {
+        &::before {
+            content: "\E914";
+        }
+    }
+
+    &[href$=".c"] {
+        &::before {
+            content: "\EB32";
+        }
+    }
+
+    &[href$=".go"] {
+        &::before {
+            content: "\E292";
+        }
+    }
+
+    &[href$=".java"],
+    &[href$=".jar"],
+    &[href$=".class"] {
+        &::before {
+            content: "\E1C2";
+        }
+    }
+
+    &[href$=".lua"] {
+        &::before {
+            content: "\EB7A";
+        }
+    }
+
+    &[href$=".php"],
+    &[href$=".pl"],
+    &[href$=".rb"],
+    &[href$=".less"],
+    &[href$=".nim"] {
+        &::before {
+            content: "\E914";
+        }
+    }
+
+    &[href$=".js"] {
+        &::before {
+            content: "\EB24";
+        }
+    }
+
+    &[href$=".ts"] {
+        &::before {
+            content: "\EB26";
+        }
+    }
+
+    &[href$=".py"] {
+        &::before {
+            content: "\EB2C";
+        }
+    }
+
+    &[href$=".rs"],
+    &[href$=".rlib"] {
+        &::before {
+            content: "\EB28";
+        }
+    }
+
+    &[href$=".css"] {
+        &::before {
+            content: "\EB34";
+        }
+    }
+
+    &[href$=".cs"] {
+        &::before {
+            content: "\EB30";
+        }
+    }
+
+    &[href$=".html"],
+    &[href$=".htm"] {
+        &::before {
+            content: "\EB38";
+        }
+    }
+
+    &[href$=".md"] {
+        &::before {
+            content: "\ED50";
+        }
+    }
+
+    &[href$=".exe"],
+    &[href$=".appimage"],
+    &[href$=".AppImage"],
+    &[href$=".msi"] {
+        &::before {
+            content: "\E5DA";
+        }
+    }
+
+    &[href$=".park"],
+    &[href$=".sv6"],
+    &[href$=".sc6"],
+    &[href$=".td6"],
+    &[href$=".sc4"],
+    &[href$=".sv4"],
+    &[href$=".td4"] {
+        &::before {
+            content: "\E4A0";
+        }
+    }
+}

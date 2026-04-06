@@ -5,12 +5,11 @@
   "license": "AGPL-3.0",
   "type": "module",
   "scripts": {
-    "build": "tsc && npx build-shit",
+    "build": "npx build-shit && ln node_modules/@phosphor-icons/web/src/regular/Phosphor.* assets/css/icons/",
     "watch": "npx build-shit --watch"
   },
   "devDependencies": {
-    "forking-build-shit": "^1.1.1",
-    "typescript": "^6.0.2"
+    "forking-build-shit": "^1.1.2"
   },
   "dependencies": {
     "@phosphor-icons/web": "^2.1.2"
