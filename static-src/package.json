@@ -5,10 +5,14 @@
   "license": "AGPL-3.0",
   "type": "module",
   "scripts": {
-    "build": "tsc && npx build-shit"
+    "build": "tsc && npx build-shit",
+    "watch": "npx build-shit --watch"
   },
   "devDependencies": {
-    "forking-build-shit": "^1.0.5",
+    "forking-build-shit": "^1.1.1",
     "typescript": "^6.0.2"
+  },
+  "dependencies": {
+    "@phosphor-icons/web": "^2.1.2"
   }
 }
