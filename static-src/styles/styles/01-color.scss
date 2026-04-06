@@ -1,0 +1,84 @@
+:root {
+    --link-color: #0D47A1;
+    --link-hover-color: #1976D2;
+    --foreground: #000;
+    --background: #F5F5F5;
+    --table-border: #424242;
+    --head-background: #BDBDBD;
+    --head-foreground: var(var(--foreground));
+    --row-background: #EEEEEE;
+    --row-background-alternate: #E0E0E0;
+    --nav-background: #C5CAE9;
+    --nav-border: #283593;
+    --nav-link-color: #1A237E;
+    --nav-link-hover-color: #3F51B5;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --link-color: #90CAF9;
+        --link-hover-color: #42A5F5;
+        --foreground: #F5F5F5;
+        --background: #000;
+        --table-border: #BDBDBD;
+        --head-background: #424242;
+        --head-foreground: #fff;
+        --row-background: #212121;
+        --row-background-alternate: #2c2c2c;
+        --nav-background: #1A237E;
+        --nav-border: #5C6BC0;
+        --nav-link-color: #C5CAE9;
+        --nav-link-hover-color: #7986CB;
+    }
+}
+
+body {
+    background-color: var(--background);
+    color: var(--foreground);
+}
+
+a {
+    color: var(--link-color);
+
+    &:hover {
+        color: var(--link-hover-color);
+    }
+}
+
+table {
+    th, td {
+        border-color: var(--table-border);
+    }
+}
+
+td.link a {
+    &[href]::before {
+        color: var(--foreground);
+    }
+}
+
+th {
+    color: var(--head-foreground);
+    background-color: var(--head-background);
+}
+
+tr {
+    background-color: var(--row-background);
+}
+
+tr:nth-child(2n) {
+    background-color: var(--row-background-alternate);
+}
+
+.navigation {
+    background-color: var(--nav-background);
+    border-color: var(--nav-border);
+
+    a {
+        color: var(--nav-link-color);
+
+        &:hover {
+            color: var(--nav-link-hover-color);
+        }
+    }
+}

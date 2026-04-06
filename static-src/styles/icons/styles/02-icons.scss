@@ -182,6 +182,13 @@ td.link.link a {
         }
     }
 
+    &[href$=".mail"],
+    &[href$=".email"] {
+        &::before {
+            content: "\E218";
+        }
+    }
+
     &[href$=".doc"] {
         &::before {
             content: "\EB1E";
