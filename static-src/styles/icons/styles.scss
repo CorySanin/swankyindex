@@ -51,7 +51,12 @@ td.link.link a {
     &[href~="SHA256"],
     &[href$=".md5"],
     &[href$=".sha1"],
-    &[href$=".sha256"],
+    &[href$=".sha256"] {
+        &::before {
+            content: "\E2A2";
+        }
+    }
+
     &[href$=".pgp"],
     &[href$=".asc"],
     &[href$=".sig"] {
@@ -63,12 +68,15 @@ td.link.link a {
     &[href$=".zip"],
     &[href$=".7z"],
     &[href$=".rar"],
+    &[href$=".arc"],
     &[href$=".tar"],
     &[href$=".tar.zst"],
+    &[href$=".gz"],
     &[href$=".xz"],
     &[href$=".txz"],
     &[href$=".tgz"],
     &[href$=".gz"],
+    &[href$=".bz"],
     &[href$=".bz2"],
     &[href$=".tbz2"] {
         &::before {
@@ -76,9 +84,9 @@ td.link.link a {
         }
     }
 
-    &[href$=".bin"],
     &[href$=".cue"],
-    &[href$=".iso"] {
+    &[href$=".iso"],
+    &[href$=".cda"] {
         &::before {
             content: "\E564";
         }
@@ -125,6 +133,7 @@ td.link.link a {
     }
 
     &[href$=".json"],
+    &[href$=".jsonls"],
     &[href$=".yaml"],
     &[href$=".yml"] {
         &::before {
@@ -163,7 +172,8 @@ td.link.link a {
     }
 
     &[href$=".epub"],
-    &[href$=".mobi"] {
+    &[href$=".mobi"],
+    &[href$=".azw"] {
         &::before {
             content: "\E0E2";
         }
@@ -201,15 +211,29 @@ td.link.link a {
         }
     }
 
+    &[href$=".ics"] {
+        &::before {
+            content: "\E7B4";
+        }
+    }
+
     &[href$=".doc"] {
         &::before {
             content: "\EB1E";
         }
     }
 
+    &[href$=".odt"],
+    &[href$=".pages"] {
+        &::before {
+            content: "\E5E2";
+        }
+    }
+
     &[href$=".docx"],
     &[href$=".docm"],
-    &[href$=".dotx"] {
+    &[href$=".dotx"],
+    &[href$=".abw"] {
         &::before {
             content: "\EB6A";
         }
@@ -218,6 +242,13 @@ td.link.link a {
     &[href$=".xls"] {
         &::before {
             content: "\EB22";
+        }
+    }
+
+    &[href$=".ods"],
+    &[href$=".numbers"] {
+        &::before {
+            content: "\E150";
         }
     }
 
@@ -233,6 +264,13 @@ td.link.link a {
     &[href$=".ppt"] {
         &::before {
             content: "\EB20";
+        }
+    }
+
+    &[href$=".odp"],
+    &[href$=".key"] {
+        &::before {
+            content: "\E654";
         }
     }
 
@@ -257,7 +295,9 @@ td.link.link a {
         }
     }
 
-    &[href~="INSTALL"] {
+    &[href~="INSTALL"],
+    &[href$=".msi"],
+    &[href$=".mpkg"] {
         &::before {
             content: "\E20A";
         }
@@ -292,6 +332,7 @@ td.link.link a {
     &[href$=".mogg"],
     &[href$=".opus"],
     &[href$=".wma"],
+    &[href$=".weba"],
     &[href$=".aac"],
     &[href$=".aiff"],
     &[href$=".alac"],
@@ -303,19 +344,41 @@ td.link.link a {
         }
     }
 
+    &[href$=".chart"],
+    &[href$=".band"] {
+        &::before {
+            content: "\EA8A";
+        }
+    }
+
+    &[href$=".midi"],
+    &[href$=".mid"] {
+        &::before {
+            content: "\E9C8";
+        }
+    }
+
     &[href$=".bmp"],
     &[href$=".gif"],
     &[href$=".jpg"],
     &[href$=".jpeg"],
     &[href$=".png"],
+    &[href$=".apng"],
     &[href$=".webp"],
     &[href$=".avif"],
     &[href$=".heif"],
+    &[href$=".tif"],
     &[href$=".tiff"],
     &[href$=".jxl"],
     &[href$=".ico"] {
         &::before {
             content: "\E2CC";
+        }
+    }
+
+    &[href$=".raw"] {
+        &::before {
+            content: "\E00A";
         }
     }
 
@@ -325,7 +388,28 @@ td.link.link a {
         }
     }
 
+    &[href$=".eps"],
+    &[href$=".wmf"],
+    &[href$=".cdr"],
+    &[href$=".ai"] {
+        &::before {
+            content: "\E6D4";
+        }
+    }
+
+    &[href$=".eot"],
+    &[href$=".ttf"],
+    &[href$=".fon"],
+    &[href$=".otf"],
+    &[href$=".woff"],
+    &[href$=".woff2"] {
+        &::before {
+            content: "\E6EE";
+        }
+    }
+
     &[href$=".psd"],
+    &[href$=".psp"],
     &[href$=".xcf"],
     &[href$=".kra"] {
         &::before {
@@ -338,6 +422,7 @@ td.link.link a {
     &[href$=".flv"],
     &[href$=".mkv"],
     &[href$=".mov"],
+    &[href$=".3gp"],
     &[href$=".webm"],
     &[href$=".ogv"],
     &[href$=".wmv"],
@@ -349,7 +434,8 @@ td.link.link a {
         }
     }
 
-    &[href$=".sh"] {
+    &[href$=".sh"],
+    &[href$=".csh"] {
         &::before {
             content: "\EAE8";
         }
@@ -404,7 +490,8 @@ td.link.link a {
         }
     }
 
-    &[href$=".js"] {
+    &[href$=".js"],
+    &[href$=".mjs"] {
         &::before {
             content: "\EB24";
         }
@@ -441,10 +528,25 @@ td.link.link a {
         }
     }
 
+    &[href$=".xhtml"],
     &[href$=".html"],
     &[href$=".htm"] {
         &::before {
             content: "\EB38";
+        }
+    }
+
+    &[href~=".gitignore"] {
+        &::before {
+            content: "\E278";
+        }
+    }
+
+    &[href$="Dockerfile"],
+    &[href~=".dockerignore"],
+    &[href~="docker-compose.yml"] {
+        &::before {
+            content: "\E78C";
         }
     }
 
@@ -456,20 +558,46 @@ td.link.link a {
 
     &[href$=".exe"],
     &[href$=".appimage"],
-    &[href$=".AppImage"],
-    &[href$=".msi"] {
+    &[href$=".AppImage"] {
         &::before {
             content: "\E5DA";
+        }
+    }
+
+    &[href$=".bin"],
+    &[href$=".dll"] {
+        &::before {
+            content: "\EE60";
+        }
+    }
+
+    &[href$=".nes"],
+    &[href$=".snes"],
+    &[href$=".z64"],
+    &[href$=".rvz"] {
+        &::before {
+            content: "\E26E";
         }
     }
 
     &[href$=".park"],
     &[href$=".sv6"],
     &[href$=".sc6"],
-    &[href$=".td6"],
     &[href$=".sc4"],
-    &[href$=".sv4"],
+    &[href$=".sv4"] {
+        &::before {
+            content: "\E9D0";
+        }
+    }
+
+    &[href$=".td6"],
     &[href$=".td4"] {
+        &::before {
+            content: "\E4A0";
+        }
+    }
+
+    &[href$=".jml"] {
         &::before {
             content: "\E4A0";
         }

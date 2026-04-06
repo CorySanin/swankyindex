@@ -9,7 +9,7 @@
     "watch": "npx build-shit --watch"
   },
   "devDependencies": {
-    "forking-build-shit": "^1.1.2"
+    "forking-build-shit": "^1.1.3"
   },
   "dependencies": {
     "@phosphor-icons/web": "^2.1.2"
