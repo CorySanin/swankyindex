@@ -20,10 +20,11 @@ var migrationsFs embed.FS
 
 type (
 	Download struct {
-		Path      string
-		Filename  string
-		Timestamp time.Time
-		Removed   bool // TODO: remove?
+		Path         string
+		Filename     string
+		AccessDomain string
+		UserAgent    string
+		Timestamp    time.Time
 	}
 
 	Storage struct {

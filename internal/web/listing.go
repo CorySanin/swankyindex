@@ -105,8 +105,10 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		http.ServeContent(rec, r, fileName, fileStat.ModTime(), file)
 		if rec.success() {
 			store.IncrementDownload(storage.Download{
-				Path:     fp,
-				Filename: fileName,
+				Path:         fp,
+				Filename:     fileName,
+				AccessDomain: r.Host,
+				UserAgent:    r.UserAgent(),
 			})
 		}
 		return
