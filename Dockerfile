@@ -24,6 +24,22 @@ RUN CGO_ENABLED=1 GOOS=linux go build -o /download-count-listing cmd/downloadcou
 
 FROM gcr.io/distroless/base-debian13 AS deploy
 WORKDIR /srv
+
+ARG version=develop
+ARG githash=REVISION
+ARG created=CREATED
+
+LABEL org.opencontainers.image.title="Download Count Listing"
+LABEL org.opencontainers.image.description="HTTP directory index listing with download counts"
+LABEL org.opencontainers.image.authors="Cory Sanin <corysanin@outlook.com>"
+LABEL org.opencontainers.image.url="https://github.com/CorySanin/downloadcountlisting"
+LABEL org.opencontainers.image.documentation="https://github.com/CorySanin/downloadcountlisting"
+LABEL org.opencontainers.image.source="https://github.com/CorySanin/downloadcountlisting"
+LABEL org.opencontainers.image.licenses="AGPL-3.0"
+LABEL org.opencontainers.image.version="${version}"
+LABEL org.opencontainers.image.revision="${githash}"
+LABEL org.opencontainers.image.created="${created}"
+
 COPY --link --from=static /usr/src/static/staging/ .
 COPY --link --from=builder /download-count-listing /download-count-listing
 EXPOSE 8080
