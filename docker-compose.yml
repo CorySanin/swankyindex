@@ -1,0 +1,11 @@
+services:
+    dcl:
+        container_name: dcl
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        restart: "no"
+        volumes:
+            - ./root:/srv/http
+        ports:
+            - 8080:8080

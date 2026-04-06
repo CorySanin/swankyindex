@@ -1,0 +1,11 @@
+.vscode/
+node_modules/
+static/css/
+static/js/
+static/images/webp/
+static/images/avif/
+root/
+config.yml
+Dockerfile
+docker-compose.yml
+*.db
