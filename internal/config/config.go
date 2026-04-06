@@ -2,7 +2,6 @@ package config
 
 import (
 	"errors"
-	"html/template"
 	"log"
 	"os"
 	"path"
@@ -20,10 +19,8 @@ type Conf struct {
 	Styles        *string `yaml:"styles"`
 	Icons         *bool   `yaml:"icons"`
 	HideDownloads *bool   `yaml:"hideDownloads"`
-	heading       string  `yaml:"heading"`
-	footer        string  `yaml:"footer"`
-	Heading       template.HTML
-	Footer        template.HTML
+	Heading       *string `yaml:"heading"`
+	Footer        *string `yaml:"footer"`
 	directory     string
 }
 
@@ -43,8 +40,8 @@ func Config() Conf {
 		Icons:         populateKeyBool(cfg.Icons, "ICONS", new(bool(true))),
 		HideDownloads: populateKeyBool(cfg.HideDownloads, "HIDEDOWNLOADS", new(bool(false))),
 		Styles:        populateKey(cfg.Styles, "STYLES", new(string("styles.css"))),
-		Heading:       template.HTML(cfg.Heading),
-		Footer:        template.HTML(cfg.Footer),
+		Heading:       populateKey(cfg.Heading, "HEADING", new(string("<h1>Index of <span id=\"path\">%path%</span></h1>"))),
+		Footer:        populateKey(cfg.Footer, "FOOTER", new(string(""))),
 	}
 }
 

@@ -83,8 +83,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 			Icons:          *conf.Icons,
 			HideDownloads:  *conf.HideDownloads,
 			Styles:         conf.Styles,
-			Heading:        conf.Heading,
-			Footer:         conf.Footer,
+			Heading:        template.HTML(strings.ReplaceAll(*conf.Heading, "%path%", template.HTMLEscapeString(r.URL.Path))),
+			Footer:         template.HTML(strings.ReplaceAll(*conf.Footer, "%path%", template.HTMLEscapeString(r.URL.Path))),
 		}
 		if err := templates.ExecuteTemplate(w, "layout.html", data); err != nil {
 			http.Error(w, "Something went wrong", http.StatusInternalServerError)
