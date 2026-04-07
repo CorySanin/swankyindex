@@ -66,18 +66,6 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Define metadata variables
-        run: |
-          sed -i "s/ARG githash=.*/ARG githash=${{ github.sha }}/" Dockerfile
-          sed -i "s/ARG created=.*/ARG created=$(date -u +'%Y-%m-%dT%H:%M:%S%:z')/" Dockerfile
-          cat Dockerfile
-      
-      - name: Define metadata variables (release)
-        if: "startsWith(github.ref, 'refs/tags/v')"
-        run: |
-          sed -i "s/ARG version=.*/ARG version=${{ github.ref_name }}/" Dockerfile
-          cat Dockerfile
-
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         env:
@@ -132,6 +120,18 @@ jobs:
             echo "type=semver,pattern={{major}}.{{minor}}"
             echo "type=semver,pattern={{major}}"
             echo "EOF"
+            echo "PLABELS<<EOF"
+            echo "org.opencontainers.image.title=DownloadCountListing"
+            echo "org.opencontainers.image.description=directory index listing with download counts"
+            echo "org.opencontainers.image.licenses=AGPL-3.0"
+            echo "org.opencontainers.image.version=${{ github.ref_name }}"
+            echo "org.opencontainers.image.revision=${{ github.sha }}"
+            echo "org.opencontainers.image.created={{ date 'YYYY-MM-DD[T]HH:mm:ss[Z]' }}"
+            echo "org.opencontainers.image.authors=Cory Sanin <corysanin@outlook.com>"
+            echo "org.opencontainers.image.url=${{ github.server_url }}/${{ github.repository }}"
+            echo "org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}"
+            echo "org.opencontainers.image.documentation=${{ github.server_url }}/${{ github.repository }}"
+            echo "EOF"
           } >> "$GITHUB_ENV"
       
       - name: Define develop tag patterns
@@ -145,6 +145,18 @@ jobs:
             echo "type=ref,event=branch"
             echo "type=ref,event=pr"
             echo "EOF"
+            echo "PLABELS<<EOF"
+            echo "org.opencontainers.image.title=DownloadCountListing"
+            echo "org.opencontainers.image.description=directory index listing with download counts"
+            echo "org.opencontainers.image.licenses=AGPL-3.0"
+            echo "org.opencontainers.image.version=develop"
+            echo "org.opencontainers.image.revision=${{ github.sha }}"
+            echo "org.opencontainers.image.created={{ date 'YYYY-MM-DD[T]HH:mm:ss[Z]' }}"
+            echo "org.opencontainers.image.authors=Cory Sanin <corysanin@outlook.com>"
+            echo "org.opencontainers.image.url=${{ github.server_url }}/${{ github.repository }}"
+            echo "org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}"
+            echo "org.opencontainers.image.documentation=${{ github.server_url }}/${{ github.repository }}"
+            echo "EOF"
           } >> "$GITHUB_ENV"
       
       - name: Extract metadata for Docker image
@@ -153,6 +165,7 @@ jobs:
         with:
           images: ${{ env.PIMAGES }}
           tags: ${{ env.PTAGS }}
+          labels: ${{ env.PLABELS }}
 
       - name: Combine JVM images into single manifest
         uses: int128/docker-manifest-create-action@v2
