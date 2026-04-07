@@ -16,6 +16,11 @@ body {
 	box-sizing: border-box;
 }
 
+.table-container {
+	max-width: 100%;
+	overflow-x: auto;
+}
+
 table {
 	width: 100%;
 
@@ -25,6 +30,14 @@ table {
 		overflow-x: auto;
 		overflow-wrap: anywhere;
 		padding: 8px;
+
+		&.link {
+			min-width: 225px;
+		}
+
+		&.date {
+			min-width: 110px;
+		}
 	}
 
 	th {
@@ -53,4 +66,20 @@ table {
 
 .footer {
 	margin-top: 1.25em;
+}
+
+@media screen and (max-width: 990px) {
+	.date .time {
+		display: none;
+	}
+}
+
+@media screen and (max-width: 825px) {
+	.dlRecent {
+		display: none;
+	}
+}
+
+@media screen and (max-width: 500px) {
+	.table-container table {}
 }

@@ -12,33 +12,35 @@
 
 <body>
     {{.Heading}}
-    <table id="list">
-        <thead>
-            <tr>
-                <th class="link">File Name</th>
-                <th class="size">File Size</th>
-                <th class="date">Date</th>
-                {{if not .HideDownloads}}<th class="dlRecent">Download (3d)</th>
-                <th class="dlTotal">Download (Total)</th>{{end}}
-            </tr>
-        </thead>
-        <tbody>
-            {{range .Subdirectories}}<tr>
-                <td class="link"><a href="{{.}}/" title="{{.}}">{{.}}/</a></td>
-                <td class="na size">-</td>
-                <td class="na date">-</td>
-                {{if not $.HideDownloads}}<td class="na dlcount dlRecent">-</td>
-                <td class="na dlcount dlTotal">-</td>{{end}}
-            </tr>
-            {{end}}{{range .Files}}<tr>
-                <td class="link"><a href="{{.Filename}}" title="{{.Filename}}">{{.Filename}}</a></td>
-                <td class="size">{{.Size}}</td>
-                <td class="date">{{.Date}}</td>
-                {{if not $.HideDownloads}}<td class="dlcount dlRecent">{{.DL}}</td>
-                <td class="dlcount dlTotal">{{.DLTotal}}</td>{{end}}
-            </tr>
-            {{end}}
-        </tbody>
-    </table>
+    <div class="table-container">
+        <table id="list">
+            <thead>
+                <tr>
+                    <th class="link">File Name</th>
+                    <th class="size">File Size</th>
+                    <th class="date">Date</th>
+                    {{if not .HideDownloads}}<th class="dlRecent">Download (3d)</th>
+                    <th class="dlTotal">Download <span class="dlRecent">(Total)</span></th>{{end}}
+                </tr>
+            </thead>
+            <tbody>
+                {{range .Subdirectories}}<tr>
+                    <td class="link"><a href="{{.}}/" title="{{.}}">{{.}}/</a></td>
+                    <td class="na size">-</td>
+                    <td class="na date">-</td>
+                    {{if not $.HideDownloads}}<td class="na dlcount dlRecent">-</td>
+                    <td class="na dlcount dlTotal">-</td>{{end}}
+                </tr>
+                {{end}}{{range .Files}}<tr>
+                    <td class="link"><a href="{{.Filename}}" title="{{.Filename}}">{{.Filename}}</a></td>
+                    <td class="size">{{.Size}}</td>
+                    <td class="date">{{.Date}} <span class="time">{{.Time}}</span></td>
+                    {{if not $.HideDownloads}}<td class="dlcount dlRecent">{{.DL}}</td>
+                    <td class="dlcount dlTotal">{{.DLTotal}}</td>{{end}}
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
     {{.Footer}}
 </body>
