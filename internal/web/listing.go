@@ -249,7 +249,7 @@ func getChildren(path string, hasParent bool) ([]string, []FileEntry, chan int, 
 	}
 
 	for _, v := range entires {
-		if v.IsDir() {
+		if v.IsDir() || isSymlinkDir(path, v) {
 			childDirs[dirCount] = v.Name()
 			dirCount++
 		} else {
@@ -275,6 +275,14 @@ func getChildren(path string, hasParent bool) ([]string, []FileEntry, chan int, 
 	cleanup := make(chan int)
 	go cleanUpRemovedFiles(path, childFiles, totalsMap, cleanup)
 	return childDirs, childFiles, cleanup, nil
+}
+
+func isSymlinkDir(path string, v os.DirEntry) bool {
+	if l, err := filepath.EvalSymlinks(filepath.Join(path, v.Name())); err == nil {
+		_, err := os.ReadDir(l)
+		return err == nil
+	}
+	return false,
 }
 
 func cleanUpRemovedFiles(p string, childFiles []FileEntry, totals map[string]storage.Totals, ch chan int) {
