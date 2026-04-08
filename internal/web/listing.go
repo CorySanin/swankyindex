@@ -2,6 +2,7 @@ package web
 
 import (
 	"embed"
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"log"
@@ -21,24 +22,33 @@ import (
 
 type (
 	FileEntry struct {
-		Filename string
-		Size     string
-		Date     string
-		Time     string
-		DL       int
-		DLTotal  int
+		Filename string `json:"filename"`
+		Size     string `json:"size"`
+		Date     string `json:"date"`
+		Time     string `json:"time"`
+		DL       int    `json:"dl"`
+		DLTotal  int    `json:"dlTotal"`
+	}
+
+	ApiErrorResponse struct {
+		Error *string `json:"error"`
+	}
+
+	ApiListingData struct {
+		ApiErrorResponse
+		Path           string      `json:"path"`
+		Subdirectories []string    `json:"subdirectories"`
+		Files          []FileEntry `json:"files"`
 	}
 
 	ListingData struct {
-		Title          string
-		Path           string
-		Subdirectories []string
-		Files          []FileEntry
-		Icons          bool
-		HideDownloads  bool
-		Styles         *string
-		Heading        template.HTML
-		Footer         template.HTML
+		ApiListingData
+		Title         string
+		Icons         bool
+		HideDownloads bool
+		Styles        *string
+		Heading       template.HTML
+		Footer        template.HTML
 	}
 )
 
@@ -63,10 +73,6 @@ func InitWeb(cfg config.Conf, st storage.Storage) {
 }
 
 func Handler(w http.ResponseWriter, r *http.Request) {
-	if strings.HasPrefix(r.URL.Path, "/.api/v1/") {
-		apiHandler(w, r)
-		return
-	}
 	cDir, err := conf.GetDirectory()
 	if err != nil {
 		log.Fatalf("Get directory failed: %v", err)
@@ -78,23 +84,27 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if childDirs, childFiles, ch, err := getChildren(*config.NormalizePath(destination), r.URL.Path != "/"); err == nil {
+		defer func() {
+			<-ch
+		}()
 		normalizedDirname := *config.NormalizePath(r.URL.Path)
 		var data = ListingData{
-			Title:          *conf.Title,
-			Path:           normalizedDirname,
-			Subdirectories: childDirs,
-			Files:          childFiles,
-			Icons:          *conf.Icons,
-			HideDownloads:  *conf.HideDownloads,
-			Styles:         conf.Styles,
-			Heading:        template.HTML(strings.ReplaceAll(*conf.Heading, "%path%", template.HTMLEscapeString(normalizedDirname))),
-			Footer:         template.HTML(strings.ReplaceAll(*conf.Footer, "%path%", template.HTMLEscapeString(normalizedDirname))),
+			ApiListingData: ApiListingData{
+				Path:           normalizedDirname,
+				Subdirectories: childDirs,
+				Files:          childFiles,
+			},
+			Title:         *conf.Title,
+			Icons:         *conf.Icons,
+			HideDownloads: *conf.HideDownloads,
+			Styles:        conf.Styles,
+			Heading:       template.HTML(strings.ReplaceAll(*conf.Heading, "%path%", template.HTMLEscapeString(normalizedDirname))),
+			Footer:        template.HTML(strings.ReplaceAll(*conf.Footer, "%path%", template.HTMLEscapeString(normalizedDirname))),
 		}
 		if err := templates.ExecuteTemplate(w, "layout.html", data); err != nil {
 			http.Error(w, "Something went wrong", http.StatusInternalServerError)
 			log.Default().Print(err.Error())
 		}
-		<-ch
 		return
 	} else if file, err := os.Open(destination); err == nil {
 		defer file.Close()
@@ -129,18 +139,62 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "404 file not found", 404)
 }
 
+func ApiHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	version := r.Header.Get("X-API-Version")
+	if version != "1" {
+		w.WriteHeader(http.StatusPreconditionFailed)
+		json.NewEncoder(w).Encode(ApiErrorResponse{
+			Error: new(string("unexpected API version")),
+		})
+		return
+	}
+	cDir, err := conf.GetDirectory()
+	if err != nil {
+		log.Fatalf("Get directory failed: %v", err)
+	}
+	rpath := config.NormalizePath(r.URL.Path[len("/.api/"):])
+	destination := filepath.Join(cDir, *rpath)
+	if !strings.HasPrefix(destination+config.SeparatorString, cDir) {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(ApiErrorResponse{
+			Error: new(string("bad request")),
+		})
+		log.Printf("User tried accessing %s via API but was denied.", destination)
+		return
+	}
+	if r.Method != "GET" {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(ApiErrorResponse{
+			Error: new(string("request method must be GET")),
+		})
+		return
+	}
+	if childDirs, childFiles, ch, err := getChildren(*config.NormalizePath(destination), *rpath != "/"); err == nil {
+		defer func() {
+			<-ch
+		}()
+		var data = ApiListingData{
+			Path:           *config.NormalizePath(*rpath),
+			Subdirectories: childDirs,
+			Files:          childFiles,
+		}
+		json.NewEncoder(w).Encode(data)
+		return
+	}
+	w.WriteHeader(http.StatusNotFound)
+	json.NewEncoder(w).Encode(ApiErrorResponse{
+		Error: new(string("not found")),
+	})
+}
+
 func getMimeType(f string) (string, error) {
 	lastDot := strings.LastIndex(f, ".")
 	if lastDot < 0 {
-		return "", fmt.Errorf("no dot character in %s", f)
+		return "", fmt.Errorf("No dot character in %s", f)
 	}
-	ext := f[lastDot:len(f)]
+	ext := f[lastDot:]
 	return mime.TypeByExtension(ext), nil
-}
-
-func apiHandler(w http.ResponseWriter, r *http.Request) {
-	// rpath = r.URL.Path[len("/.api/v1/"):]
-	http.Error(w, "API not yet implemented", 404)
 }
 
 func getChildren(path string, hasParent bool) ([]string, []FileEntry, chan int, error) {
