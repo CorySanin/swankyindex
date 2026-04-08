@@ -2,9 +2,11 @@ package web
 
 import (
 	"embed"
+	"fmt"
 	"html/template"
 	"log"
 	"maps"
+	"mime"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -102,8 +104,12 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Internal server error.", 500)
 			return
 		}
-		w.Header().Set("Content-Disposition", "attachment; filename="+fileName)
-		w.Header().Set("Content-Type", r.Header.Get("Content-Type")) // TODO: set content-type accordingly
+		mt, err := getMimeType(fileName)
+		if err != nil {
+			mt = "application/octet-stream"
+		}
+		w.Header().Set("Content-Type", mt)
+		w.Header().Set("Content-Disposition", "filename="+fileName)
 		w.Header().Set("Content-Length", strconv.FormatInt(fileStat.Size(), 10))
 
 		rec := &responseWriterWithStatus{ResponseWriter: w}
@@ -121,6 +127,15 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	http.Error(w, "404 file not found", 404)
+}
+
+func getMimeType(f string) (string, error) {
+	lastDot := strings.LastIndex(f, ".")
+	if lastDot < 0 {
+		return "", fmt.Errorf("no dot character in %s", f)
+	}
+	ext := f[lastDot:len(f)]
+	return mime.TypeByExtension(ext), nil
 }
 
 func apiHandler(w http.ResponseWriter, r *http.Request) {
