@@ -135,6 +135,26 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 			})
 		}
 		return
+	} else if filepath.Base(destination) == "favicon.ico" {
+		if file, err := os.Open(filepath.Join("static", "images", filepath.Base(destination))); err == nil {
+			defer file.Close()
+			_, fileName := filepath.Split(destination)
+			fileStat, err := file.Stat()
+			if err != nil {
+				http.Error(w, "Internal server error.", 500)
+				return
+			}
+			mt, err := getMimeType(fileName)
+			if err != nil {
+				mt = "application/octet-stream"
+			}
+			w.Header().Set("Content-Type", mt)
+			w.Header().Set("Content-Disposition", "filename="+fileName)
+			w.Header().Set("Content-Length", strconv.FormatInt(fileStat.Size(), 10))
+
+			http.ServeContent(w, r, fileName, fileStat.ModTime(), file)
+			return
+		}
 	}
 	http.Error(w, "404 file not found", 404)
 }
