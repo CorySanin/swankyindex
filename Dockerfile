@@ -15,6 +15,7 @@ RUN mkdir staging && npm run build
 
 WORKDIR /usr/src/static/staging
 
+COPY ./LICENSE ./static/
 COPY ./static/ ./static/
 
 RUN mkdir http data && chown 1000:1000 data
