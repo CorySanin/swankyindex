@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"slices"
 	"strconv"
 	"strings"
 	"sync"
@@ -228,6 +229,11 @@ func getChildren(path string, hasParent bool) ([]string, []FileEntry, chan int, 
 	entires, err := os.ReadDir(path)
 	if err != nil {
 		return nil, nil, nil, err
+	}
+	if *conf.HideDotfiles {
+		entires = slices.DeleteFunc(entires, func(ent os.DirEntry) bool {
+			return len(ent.Name()) > 0 && filepath.Base(ent.Name())[0] == '.'
+		})
 	}
 	dirCount := 0
 	if hasParent {
