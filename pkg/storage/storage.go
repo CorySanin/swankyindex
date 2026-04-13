@@ -46,14 +46,33 @@ type (
 )
 
 func (store *Storage) RemoveDownloads(dls []DownloadIndex) error {
-	args := make([]any, len(dls)*2)
-	for i, dl := range dls {
-		args[i*2] = dl.Path
-		args[i*2+1] = dl.Filename
+	if len(dls) == 0 {
+		return nil
 	}
-	cmd := strings.Repeat("DELETE FROM downloads WHERE Path = ? AND Filename = ? ; ", len(dls))
-	_, err := store.db.Exec(cmd, args...)
-	return err
+
+	tx, err := store.db.Begin()
+	if err != nil {
+		return fmt.Errorf("failed to begin transaction: %v", err)
+	}
+	defer tx.Rollback()
+
+	cmd, err := tx.Prepare("DELETE FROM downloads WHERE Path = ? AND Filename = ?")
+	if err != nil {
+		return fmt.Errorf("failed to prepare statement: %v", err)
+	}
+	defer cmd.Close()
+
+	for _, dl := range dls {
+		if _, err := cmd.Exec(dl.Path, dl.Filename); err != nil {
+			return fmt.Errorf("failed to execute delete: %v", err)
+		}
+	}
+
+	if err := tx.Commit(); err != nil {
+		return fmt.Errorf("failed to commit transaction: %v", err)
+	}
+
+	return nil
 }
 
 func (store *Storage) IncrementDownload(params Download) {
@@ -73,12 +92,11 @@ func (store *Storage) GetTotalsByPath(path string, c chan map[string]Totals) {
 }
 
 func (store *Storage) getTotalsByPath(path string) (map[string]Totals, error) {
-
 	totalMap := make(map[string]Totals)
 
-	t, err := store.getTotalsAllByPath(path)
+	t, err := store.db.Query("SELECT Filename, count() as Count FROM downloads WHERE Path = ? GROUP BY Filename", path)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to get total downloads for path %s: %v", path, err)
 	}
 	defer t.Close()
 	for t.Next() {
@@ -92,39 +110,24 @@ func (store *Storage) getTotalsByPath(path string) (map[string]Totals, error) {
 		}
 	}
 
-	t, err = store.getTotalsRecentByPath(path, time.Now().Add(time.Hour*24*-3))
+	recentDate := time.Now().Add(time.Hour * 24 * -3)
+	rt, err := store.db.Query("SELECT Filename, count() as Count FROM downloads WHERE Path = ? AND Timestamp > ? GROUP BY Filename", path, recentDate)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to get recent downloads for path %s: %v", path, err)
 	}
-	defer t.Close()
-	for t.Next() {
+	defer rt.Close()
+	for rt.Next() {
 		var filename string
 		var count int
-		if err := t.Scan(&filename, &count); err != nil {
+		if err := rt.Scan(&filename, &count); err != nil {
 			return nil, err
 		}
-		var existing = totalMap[filename]
-		existing.Recent = count
-		totalMap[filename] = existing
+		total := totalMap[filename]
+		total.Recent = count
+		totalMap[filename] = total
 	}
 
 	return totalMap, nil
-}
-
-func (store *Storage) getTotalsAllByPath(path string) (*sql.Rows, error) {
-	result, err := store.db.Query("SELECT Filename, count() as Count FROM downloads WHERE Path = ? GROUP BY Filename", path)
-	if err != nil {
-		return nil, fmt.Errorf("Failed to get total downloads for path %s : %v", path, err)
-	}
-	return result, nil
-}
-
-func (store *Storage) getTotalsRecentByPath(path string, date time.Time) (*sql.Rows, error) {
-	result, err := store.db.Query("SELECT Filename, count() as Count FROM downloads WHERE Path = ? AND Timestamp > ? GROUP BY Filename", path, date)
-	if err != nil {
-		return nil, fmt.Errorf("Failed to get recent downloads for path %s : %v", path, err)
-	}
-	return result, nil
 }
 
 func (store *Storage) Optimize() error {
