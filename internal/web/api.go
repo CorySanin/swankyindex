@@ -10,6 +10,19 @@ import (
 	"github.com/CorySanin/downloadcountlisting/internal/config"
 )
 
+type (
+	ApiErrorResponse struct {
+		Error *string `json:"error"`
+	}
+
+	ApiListingData struct {
+		ApiErrorResponse
+		Path           string      `json:"path"`
+		Subdirectories []string    `json:"subdirectories"`
+		Files          []FileEntry `json:"files"`
+	}
+)
+
 const (
 	ApiPath    string = "/.api/"
 	apiDirPath string = ApiPath + "dir/"

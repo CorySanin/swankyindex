@@ -29,17 +29,6 @@ type (
 		DLTotal  int    `json:"dlTotal"`
 	}
 
-	ApiErrorResponse struct {
-		Error *string `json:"error"`
-	}
-
-	ApiListingData struct {
-		ApiErrorResponse
-		Path           string      `json:"path"`
-		Subdirectories []string    `json:"subdirectories"`
-		Files          []FileEntry `json:"files"`
-	}
-
 	ListingData struct {
 		ApiListingData
 		Title         string
