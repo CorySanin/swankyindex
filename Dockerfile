@@ -11,6 +11,7 @@ RUN --mount=target=/usr/src/static/package.json,source=static-src/package.json -
 
 COPY --link --exclude=assets/ ./static-src/ .
 ENV STYLEOUTDIR=staging/static/css/
+ENV SCRIPTSOUTDIR=staging/static/js/
 RUN mkdir staging && npm run build
 
 WORKDIR /usr/src/static/staging

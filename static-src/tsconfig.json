@@ -1,0 +1,13 @@
+{
+  "extends": "@sindresorhus/tsconfig",
+  "compilerOptions": {
+    "outDir": "${configDir}/scripts",
+    "exactOptionalPropertyTypes": true,
+    "esModuleInterop": true,
+    "sourceMap": false,
+    "rootDir": "./src"
+  },
+  "include": [
+    "src"
+  ]
+}

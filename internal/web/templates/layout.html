@@ -27,7 +27,7 @@
             </thead>
             <tbody>
                 {{range .Subdirectories}}<tr>
-                    <td class="link"><a href="{{.}}/" title="{{.}}">{{.}}/</a></td>
+                    <td class="link directory"><a href="{{.}}/" title="{{.}}">{{.}}/</a></td>
                     <td class="na size">-</td>
                     <td class="na date">-</td>
                     {{if not $.HideDownloads}}<td class="na dlcount dlRecent">-</td>
@@ -45,4 +45,5 @@
         </table>
     </div>
     {{.Footer}}
+    <script src="/.static/js/navigation.js"></script>
 </body>

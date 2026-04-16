@@ -23,6 +23,7 @@ type (
 
 	ApiListingData struct {
 		ApiErrorResponse
+		TitlePrefix    string      `json:"titlePrefix"`
 		Path           string      `json:"path"`
 		Subdirectories []string    `json:"subdirectories"`
 		Files          []FileEntry `json:"files"`
@@ -76,7 +77,7 @@ func (s *Server) apiDirHandler(w http.ResponseWriter, r *http.Request, _ string)
 	if err != nil {
 		log.Fatalf("Get directory failed: %v", err)
 	}
-	rpath := config.NormalizePath(r.URL.Path[len(apiDirPath):])
+	rpath := config.NormalizePath(r.URL.Path[len(apiDirPath)-1:])
 	destination := filepath.Join(cDir, *rpath)
 	if !strings.HasPrefix(filepath.Clean(destination)+config.SeparatorString, cDir) {
 		w.WriteHeader(http.StatusBadRequest)
@@ -94,6 +95,7 @@ func (s *Server) apiDirHandler(w http.ResponseWriter, r *http.Request, _ string)
 			Path:           *rpath,
 			Subdirectories: childDirs,
 			Files:          childFiles,
+			TitlePrefix:    *s.conf.Title,
 		}
 		json.NewEncoder(w).Encode(data)
 		return

@@ -2,6 +2,7 @@ package web
 
 import (
 	"embed"
+	"fmt"
 	"html/template"
 	"log"
 	"mime"
@@ -84,6 +85,7 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 			<-ch
 		}()
 		normalizedDirname := *config.NormalizePath(r.URL.Path)
+		pathSub := fmt.Sprintf("<span class=\"pathname\">%s</span>", template.HTMLEscapeString(normalizedDirname))
 		var data = ListingData{
 			ApiListingData: ApiListingData{
 				Path:           normalizedDirname,
@@ -94,8 +96,8 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 			Icons:         *s.conf.Icons,
 			HideDownloads: *s.conf.HideDownloads,
 			Styles:        s.conf.Styles,
-			Heading:       template.HTML(strings.ReplaceAll(*s.conf.Heading, "%path%", template.HTMLEscapeString(normalizedDirname))),
-			Footer:        template.HTML(strings.ReplaceAll(*s.conf.Footer, "%path%", template.HTMLEscapeString(normalizedDirname))),
+			Heading:       template.HTML(strings.ReplaceAll(*s.conf.Heading, "%path%", pathSub)),
+			Footer:        template.HTML(strings.ReplaceAll(*s.conf.Footer, "%path%", pathSub)),
 		}
 		if err := s.templates.ExecuteTemplate(w, "layout.html", data); err != nil {
 			http.Error(w, "Something went wrong", http.StatusInternalServerError)
