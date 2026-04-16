@@ -80,15 +80,16 @@ func (s *Server) apiDirHandler(w http.ResponseWriter, r *http.Request, _ string)
 	}
 	rpath := config.NormalizePath(r.URL.Path[len(apiDirPath)-1:])
 	destination := filepath.Join(cDir, *rpath)
-	if !strings.HasPrefix(filepath.Clean(destination)+config.SeparatorString, cDir) {
+	fp := filepath.Clean(destination) + config.SeparatorString
+	if !strings.HasPrefix(fp, cDir) {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(ApiErrorResponse{
 			Error: new(string("bad request")),
 		})
-		log.Printf("User tried accessing %s via API but was denied.", destination)
+		log.Printf("User tried accessing %s via API but was denied.", fp)
 		return
 	}
-	if childDirs, childFiles, ch, err := s.getChildren(destination, *rpath); err == nil {
+	if childDirs, childFiles, ch, err := s.getChildren(fp, *rpath); err == nil {
 		defer func() {
 			<-ch
 		}()
