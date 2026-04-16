@@ -35,6 +35,7 @@ type (
 		Title         string
 		Icons         bool
 		HideDownloads bool
+		EnableJS      bool
 		Styles        *string
 		Heading       template.HTML
 		Footer        template.HTML
@@ -95,6 +96,7 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 			Title:         *s.conf.Title,
 			Icons:         *s.conf.Icons,
 			HideDownloads: *s.conf.HideDownloads,
+			EnableJS:      *s.conf.EnableJS,
 			Styles:        s.conf.Styles,
 			Heading:       template.HTML(strings.ReplaceAll(*s.conf.Heading, "%path%", pathSub)),
 			Footer:        template.HTML(strings.ReplaceAll(*s.conf.Footer, "%path%", pathSub)),
