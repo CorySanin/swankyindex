@@ -22,11 +22,16 @@ document.addEventListener("DOMContentLoaded", function () {
         return document.querySelector('table#list > tbody')
     }
 
+    function getAllCheckboxes() {
+        return document.querySelectorAll('table#list > tbody > tr > td.checkCol > input[type="checkbox"]');
+    }
+
     function clearChildren(el?: Element) {
         const parent = el || getTBody();
         while (parent?.firstChild) {
             parent.removeChild(parent.lastChild!);
         }
+        setButtonState(false);
     }
 
     function createDirRow(dirName: string, dl: boolean): HTMLAnchorElement {
@@ -139,6 +144,50 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function setUpLinks(elements: NodeListOf<Element> | Element[]) {
         elements.forEach(setUpLink);
+        addCheckboxCols();
+    }
+
+    function addCheckboxCols() {
+        const trs = document.querySelectorAll('table#list > tbody > tr');
+        trs.forEach(tr => {
+            const td = document.createElement('td');
+            const link: HTMLAnchorElement | null = tr.querySelector('td.link > a');
+            td.classList.add('checkCol');
+            if (link?.href.endsWith('/')) {
+                td.appendChild(document.createTextNode('-'));
+            }
+            else if (link) {
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.value = link.href.substring(link.href.lastIndexOf('/') + 1);
+                td.appendChild(checkbox);
+                td.addEventListener('click', e => {
+                    e.target === checkbox || (checkbox.checked = !checkbox.checked);
+                    setButtonState();
+                });
+                checkbox.addEventListener('change', _ => {
+                    if (checkbox.checked) {
+                        setButtonState(true);
+                    }
+                    else {
+                        setButtonState();
+                    }
+                });
+            }
+            tr.prepend(td);
+        });
+    }
+
+    function setButtonState(force?: boolean) {
+        const btn = downloadButton!;
+        if (typeof force === 'boolean') {
+            btn.disabled = !force;
+            return;
+        }
+        btn.disabled = true;
+        getAllCheckboxes().forEach(chkbx => {
+            (chkbx as HTMLInputElement).checked && (btn.disabled = false);
+        });
     }
 
     window.addEventListener('popstate', event => {
@@ -147,4 +196,52 @@ document.addEventListener("DOMContentLoaded", function () {
 
     window.history.pushState(window.location.href, "", (new URL(window.location.href)).pathname);
     setUpLinks(document.querySelectorAll(".link.directory > a"));
+    const downloadButton = (function (element: Element | null) {
+        const button = document.createElement('button');
+        if (!element) {
+            return button;
+        }
+        const th = document.createElement('th');
+        th.classList.add('checkCol');
+        button.appendChild(document.createTextNode('📥️'));
+        button.title = 'Download selected';
+        th.appendChild(button);
+        element.prepend(th);
+        button.disabled = true;
+        return button;
+    })(document.querySelector('table#list > thead > tr'));
+
+    downloadButton.addEventListener('click', async _ => {
+        const files: string[] = [];
+        getAllCheckboxes().forEach(chkbx => {
+            (chkbx as HTMLInputElement).checked && files.push(decodeURIComponent((chkbx as HTMLInputElement).value));
+            (chkbx as HTMLInputElement).checked = false;
+        });
+        setButtonState(false);
+        const url = new URL(window.location.href);
+        const resp = await fetch(`${url.protocol}//${url.host}/.api/zip`, {
+            method: 'POST',
+            headers: {
+                'X-API-Version': '1'
+            },
+            body: JSON.stringify({
+                directory: decodeURIComponent(url.pathname),
+                files
+            })
+        });
+        if (!resp.ok) {
+            throw new Error(`Response status: ${resp.status}`);
+        }
+        const zip = URL.createObjectURL(await resp.blob());
+        const anchor = document.createElement('a');
+        anchor.href = zip;
+        const contentDisposition = resp.headers.get('Content-Disposition') || 'f=files.zip';
+        anchor.download = contentDisposition.substring(contentDisposition.indexOf('=') + 1);
+        document.body.appendChild(anchor);
+        anchor.click();
+        setTimeout(function () {
+            document.body.removeChild(anchor);
+            window.URL.revokeObjectURL(zip);
+        }, 0);
+    });
 });
