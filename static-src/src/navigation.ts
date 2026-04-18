@@ -198,11 +198,20 @@ document.addEventListener("DOMContentLoaded", function () {
             return button;
         }
         const th = document.createElement('th');
+        button.classList.add('download');
         th.classList.add('checkCol');
-        button.appendChild(document.createTextNode('📥️'));
         button.title = 'Download selected';
         th.appendChild(button);
         element.prepend(th);
+        fetch('/.static/images/svg/download.svg').then(async resp => {
+            if (!resp.ok) {
+                button.appendChild(document.createTextNode('📥️'));
+                return;
+            }
+            button.insertAdjacentHTML('afterbegin', await resp.text());
+        }, _ => {
+            button.appendChild(document.createTextNode('📥️'));
+        });
         return button;
     })(document.querySelector('table#list > thead > tr'));
 

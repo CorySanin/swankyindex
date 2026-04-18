@@ -33,11 +33,11 @@
 }
 
 .loader {
-	background-color: var(--nav-background);
+    background-color: var(--nav-background);
 
-	&::before {
-		background-color: var(--nav-border);
-	}
+    &::before {
+        background-color: var(--nav-border);
+    }
 }
 
 body {
@@ -54,7 +54,9 @@ a {
 }
 
 table {
-    th, td {
+
+    th,
+    td {
         border-color: var(--table-border);
     }
 }
@@ -88,5 +90,22 @@ tr:nth-child(2n) {
         &:hover {
             color: var(--nav-link-hover-color);
         }
+    }
+}
+
+button.download {
+    background-color: var(--nav-background);
+    border-color: var(--nav-link-color);
+
+    &:hover {
+        background-color: var(--nav-link-color);
+
+        svg {
+            fill: var(--nav-background);
+        }
+    }
+
+    svg {
+        fill: var(--nav-link-color);
     }
 }

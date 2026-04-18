@@ -99,6 +99,17 @@ body {
 	}
 }
 
+button.download {
+	cursor: pointer;
+	padding: 2px 4px;
+	border: 1px solid;
+	border-radius: 8px;
+
+	svg {
+		width: 16px;
+	}
+}
+
 @keyframes rightToLeft {
 
 	0%,
