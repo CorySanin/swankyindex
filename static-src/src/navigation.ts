@@ -214,6 +214,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         return button;
     })(document.querySelector('table#list > thead > tr'));
+    setButtonState();
 
     downloadButton.addEventListener('click', async _ => {
         const checkedFiles: string[] = [];

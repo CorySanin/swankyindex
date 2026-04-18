@@ -108,4 +108,13 @@ button.download {
     svg {
         fill: var(--nav-link-color);
     }
+
+    &:disabled {
+        cursor:not-allowed;
+        background-color: var(--row-background);
+
+        &:hover svg {
+            fill: var(--nav-link-color);
+        }
+    }
 }
