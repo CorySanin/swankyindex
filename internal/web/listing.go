@@ -33,18 +33,18 @@ type (
 	PageConfig struct {
 		Title              string `json:"title"`
 		EnableZipDownloads bool   `json:"enableZipDownloads"`
+		ShowDownloads      bool   `json:"showDownloads"`
 	}
 
 	ListingData struct {
 		ApiListingData
 		PageConfig
-		Title         string
-		Icons         bool
-		HideDownloads bool
-		EnableJS      bool
-		Styles        *string
-		Heading       template.HTML
-		Footer        template.HTML
+		Title    string
+		Icons    bool
+		EnableJS bool
+		Styles   *string
+		Heading  template.HTML
+		Footer   template.HTML
 	}
 
 	Server struct {
@@ -102,14 +102,14 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 			PageConfig: PageConfig{
 				Title:              *s.conf.Title,
 				EnableZipDownloads: *s.conf.EnableZipDownloads,
+				ShowDownloads:      *s.conf.ShowDownloads,
 			},
-			Title:         *s.conf.Title,
-			Icons:         *s.conf.Icons,
-			HideDownloads: *s.conf.HideDownloads,
-			EnableJS:      *s.conf.EnableJS,
-			Styles:        s.conf.Styles,
-			Heading:       template.HTML(strings.ReplaceAll(*s.conf.Heading, "%path%", pathSub)),
-			Footer:        template.HTML(strings.ReplaceAll(*s.conf.Footer, "%path%", pathSub)),
+			Title:    *s.conf.Title,
+			Icons:    *s.conf.Icons,
+			EnableJS: *s.conf.EnableJS,
+			Styles:   s.conf.Styles,
+			Heading:  template.HTML(strings.ReplaceAll(*s.conf.Heading, "%path%", pathSub)),
+			Footer:   template.HTML(strings.ReplaceAll(*s.conf.Footer, "%path%", pathSub)),
 		}
 		if err := s.templates.ExecuteTemplate(w, "layout.html", data); err != nil {
 			http.Error(w, "Something went wrong", http.StatusInternalServerError)
@@ -174,13 +174,13 @@ func (s *Server) getChildren(path string, reqpath string) ([]string, []FileEntry
 		return nil, nil, nil, err
 	}
 
-	if *s.conf.HideDotfiles {
+	if !*s.conf.ShowDotfiles {
 		entries = slices.DeleteFunc(entries, func(ent os.DirEntry) bool {
 			return len(ent.Name()) > 0 && ent.Name()[0] == '.'
 		})
 	}
 
-	if *s.conf.HideSymlinks {
+	if !*s.conf.ShowSymlinks {
 		entries = slices.DeleteFunc(entries, func(ent os.DirEntry) bool {
 			info, err := ent.Info()
 			if err != nil {
@@ -235,7 +235,7 @@ func (s *Server) getChildren(path string, reqpath string) ([]string, []FileEntry
 				fEntry.Date = modtime.Format(time.DateOnly)
 				fEntry.Time = modtime.Format("15:04:05 -0700")
 			}
-			if !*s.conf.HideDownloads && totalsMap != nil {
+			if *s.conf.ShowDownloads && totalsMap != nil {
 				if t, ok := totalsMap[v.Name()]; ok {
 					fEntry.DL = t.Recent
 					fEntry.DLTotal = t.All

@@ -19,7 +19,8 @@ declare global {
     interface Window {
         conf: {
             title: string,
-            enableZipDownloads: boolean
+            enableZipDownloads: boolean,
+            showDownloads: boolean,
         }
     }
 }
@@ -121,8 +122,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 throw new Error(`Response status: ${resp.status}`);
             }
             const respBody: DirApiResponse = await resp.json();
-            const anchors = respBody.subdirectories.map(dir => createDirRow(dir, respBody.dl));
-            respBody.files.forEach(file => createFileRow(file, respBody.dl));
+            const anchors = respBody.subdirectories.map(dir => createDirRow(dir, window.conf.showDownloads));
+            respBody.files.forEach(file => createFileRow(file, window.conf.showDownloads));
             document.querySelectorAll('span.pathname').forEach(pathContainer => {
                 clearChildren(pathContainer);
                 pathContainer.appendChild(document.createTextNode(respBody.path));

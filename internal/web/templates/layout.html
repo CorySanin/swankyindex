@@ -22,8 +22,8 @@
                 <tr>
                     <th class="link">File Name</th>
                     <th class="size">File Size</th>
-                    <th class="date">Date</th>
-                    {{if not .HideDownloads}}<th class="dlRecent">Download (3d)</th>
+                    <th class="date">Date</th>{{if .PageConfig.ShowDownloads}}
+                    <th class="dlRecent">Download (3d)</th>
                     <th class="dlTotal">Download <span class="dlRecent">(Total)</span></th>{{end}}
                 </tr>
             </thead>
@@ -31,15 +31,15 @@
                 {{range .Subdirectories}}<tr>
                     <td class="link directory"><a href="{{.}}/" title="{{.}}">{{.}}/</a></td>
                     <td class="na size">-</td>
-                    <td class="na date">-</td>
-                    {{if not $.HideDownloads}}<td class="na dlcount dlRecent">-</td>
+                    <td class="na date">-</td>{{if $.PageConfig.ShowDownloads}}
+                    <td class="na dlcount dlRecent">-</td>
                     <td class="na dlcount dlTotal">-</td>{{end}}
                 </tr>
                 {{end}}{{range .Files}}<tr>
                     <td class="link"><a href="{{.Filename}}" title="{{.Filename}}">{{.Filename}}</a></td>
                     <td class="size">{{.Size}}</td>
-                    <td class="date">{{.Date}} <span class="time">{{.Time}}</span></td>
-                    {{if not $.HideDownloads}}<td class="dlcount dlRecent">{{.DL}}</td>
+                    <td class="date">{{.Date}} <span class="time">{{.Time}}</span></td>{{if $.PageConfig.ShowDownloads}}
+                    <td class="dlcount dlRecent">{{.DL}}</td>
                     <td class="dlcount dlTotal">{{.DLTotal}}</td>{{end}}
                 </tr>
                 {{end}}

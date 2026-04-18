@@ -19,9 +19,9 @@ type Conf struct {
 	Directory          *string          `yaml:"directory"`
 	Styles             *string          `yaml:"styles"`
 	Icons              *bool            `yaml:"icons"`
-	HideDownloads      *bool            `yaml:"hideDownloads"`
-	HideDotfiles       *bool            `yaml:"hideDotfiles"`
-	HideSymlinks       *bool            `yaml:"hideSymlinks"`
+	ShowDownloads      *bool            `yaml:"showDownloads"`
+	ShowDotfiles       *bool            `yaml:"showDotfiles"`
+	ShowSymlinks       *bool            `yaml:"showSymlinks"`
 	EnableJS           *bool            `yaml:"enableJs"`
 	EnableZipDownloads *bool            `yaml:"enableZipDownloads"`
 	Heading            *string          `yaml:"heading"`
@@ -52,9 +52,9 @@ func Config() Conf {
 		Port:               populatePrimitive(cfg.Port, "PORT", new(int(8080))),
 		Directory:          NormalizePath(*populatePrimitive(cfg.Directory, "DIRECTORY", new(string("/srv/http/")))),
 		Icons:              populatePrimitive(cfg.Icons, "ICONS", new(bool(true))),
-		HideDownloads:      populatePrimitive(cfg.HideDownloads, "HIDEDOWNLOADS", new(bool(false))),
-		HideDotfiles:       populatePrimitive(cfg.HideDotfiles, "HIDEDOTFILES", new(bool(true))),
-		HideSymlinks:       populatePrimitive(cfg.HideSymlinks, "HIDESYMLINKS", new(bool(false))),
+		ShowDownloads:      populatePrimitive(cfg.ShowDownloads, "SHOWDOWNLOADS", new(bool(true))),
+		ShowDotfiles:       populatePrimitive(cfg.ShowDotfiles, "SHOWDOTFILES", new(bool(false))),
+		ShowSymlinks:       populatePrimitive(cfg.ShowSymlinks, "SHOWSYMLINKS", new(bool(true))),
 		EnableJS:           populatePrimitive(cfg.EnableJS, "ENABLEJS", new(bool(true))),
 		EnableZipDownloads: populatePrimitive(cfg.EnableZipDownloads, "ENABLEZIPDOWNLOADS", new(bool(false))),
 		Styles:             populatePrimitive(cfg.Styles, "STYLES", new(string("styles.css"))),
