@@ -122,6 +122,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 throw new Error(`Response status: ${resp.status}`);
             }
             const respBody: DirApiResponse = await resp.json();
+            clearChildren();
             const anchors = respBody.subdirectories.map(dir => createDirRow(dir, window.conf.showDownloads));
             respBody.files.forEach(file => createFileRow(file, window.conf.showDownloads));
             document.querySelectorAll('span.pathname').forEach(pathContainer => {
