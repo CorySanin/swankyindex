@@ -209,6 +209,7 @@ document.addEventListener("DOMContentLoaded", function () {
     downloadButton.addEventListener('click', async _ => {
         const checkedFiles: string[] = [];
         const allFiles: string[] = [];
+        setLoaderVisibility(true);
         getAllCheckboxes().forEach(c => {
             const chkbx = c as HTMLInputElement;
             chkbx.checked && checkedFiles.push(decodeURIComponent(chkbx.value));
@@ -242,6 +243,7 @@ document.addEventListener("DOMContentLoaded", function () {
             document.body.removeChild(anchor);
             window.URL.revokeObjectURL(zip);
             setButtonState();
+            setLoaderVisibility(false);
         }, 0);
     });
 });
