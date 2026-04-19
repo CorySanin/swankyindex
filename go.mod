@@ -1,4 +1,4 @@
-module github.com/CorySanin/downloadcountlisting
+module github.com/CorySanin/swankyindex
 
 go 1.26.1
 

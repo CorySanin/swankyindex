@@ -1,4 +1,4 @@
-// downloadcountlisting - directory index listing with download counts
+// swankyindex - directory index listing with download counts
 // Copyright (C) 2026  Cory Sanin
 
 // This program is free software: you can redistribute it and/or modify
@@ -30,9 +30,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/CorySanin/downloadcountlisting/internal/config"
-	"github.com/CorySanin/downloadcountlisting/internal/web"
-	"github.com/CorySanin/downloadcountlisting/pkg/storage"
+	"github.com/CorySanin/swankyindex/internal/config"
+	"github.com/CorySanin/swankyindex/internal/web"
+	"github.com/CorySanin/swankyindex/pkg/storage"
 )
 
 func main() {

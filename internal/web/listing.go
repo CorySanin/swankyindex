@@ -15,8 +15,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/CorySanin/downloadcountlisting/internal/config"
-	"github.com/CorySanin/downloadcountlisting/pkg/storage"
+	"github.com/CorySanin/swankyindex/internal/config"
+	"github.com/CorySanin/swankyindex/pkg/storage"
 	"github.com/dustin/go-humanize"
 )
 

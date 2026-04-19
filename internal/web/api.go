@@ -12,8 +12,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/CorySanin/downloadcountlisting/internal/config"
-	"github.com/CorySanin/downloadcountlisting/pkg/storage"
+	"github.com/CorySanin/swankyindex/internal/config"
+	"github.com/CorySanin/swankyindex/pkg/storage"
 )
 
 type (

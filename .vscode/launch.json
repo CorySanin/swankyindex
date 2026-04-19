@@ -10,7 +10,7 @@
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "${workspaceRoot}/cmd/downloadcountlisting/main.go",
+            "program": "${workspaceRoot}/cmd/swankyindex/main.go",
             "env": {
                 "CONFIG": "${workspaceRoot}/config.yml",
                 "DIRECTORY": "${workspaceRoot}/root/",

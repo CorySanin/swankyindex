@@ -43,7 +43,7 @@ jobs:
         run: |
           {
             echo "labels<<EOF"
-            echo "org.opencontainers.image.title=DownloadCountListing"
+            echo "org.opencontainers.image.title=swankyindex"
             echo "org.opencontainers.image.description=directory index listing with download counts"
             echo "org.opencontainers.image.licenses=AGPL-3.0"
             echo "org.opencontainers.image.version=${{ env.IMG_VERSION }}"

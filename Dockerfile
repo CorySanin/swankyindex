@@ -32,7 +32,7 @@ COPY --link --exclude=static/ --exclude=static-src/  . .
 
 RUN CGO_ENABLED=1 GOOS=linux go build \
     -ldflags '-linkmode external -extldflags "-static"' \
-    -o /download-count-listing cmd/downloadcountlisting/main.go
+    -o /download-count-listing cmd/swankyindex/main.go
 
 FROM ${BASE_IMG}:${BASE_IMG_TAG} AS user-creator
 
