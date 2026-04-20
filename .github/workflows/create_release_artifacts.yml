@@ -19,8 +19,8 @@ jobs:
           raw_tag="${GITHUB_REF##*/}"
           tag="${raw_tag#v}"  # Remove leading "v" if present
           repo_name="${{ github.event.repository.name }}"
-          echo "TAG_NAME=$tag" >> $GITHUB_OUTPUT
-          echo "ZIP_NAME=${repo_name}_${tag}_${{ matrix.arch }}.zip" >> $GITHUB_OUTPUT
+          echo "tag=$tag" >> $GITHUB_OUTPUT
+          echo "zip=${repo_name}_${tag}_${{ matrix.arch }}.zip" >> $GITHUB_OUTPUT
 
 
   build-static:
@@ -57,6 +57,7 @@ jobs:
   build-binary:
     needs:
       - varinit
+      - build-static
     strategy:
       matrix:
         arch:
