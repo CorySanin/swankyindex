@@ -70,7 +70,7 @@ jobs:
       contents: write
     env:
       TAG_NAME: ${{ needs.varinit.outputs.TAG_NAME }}
-      ZIP_NAME: ${{ github.repository }}_${{ needs.varinit.outputs.TAG_NAME }}_${{ matrix.arch }}.zip
+      ZIP_NAME: ${{ github.event.repository.name }}_${{ needs.varinit.outputs.TAG_NAME }}_${{ matrix.arch }}.zip
     steps:
       - name: Check out the repository
         uses: *checkout
