@@ -6,7 +6,11 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/corysanin/swankyindex)](https://hub.docker.com/r/corysanin/swankyindex)
 
 
-A souped-up fancyindex alternative.
+A souped-up fancyindex alternative with download stats.
+
+![Screenshot of a Swanky Index directory listing](.github/images/screenshot_artix-mirror.png)
+
+[Visit live instance](https://mirror.sanin.dev/)
 
 ## Features
 
@@ -46,13 +50,15 @@ ignore: [] # List of regular expressions. Files that match will be hidden from t
 
 Swanky Index relies on CSS and Javascript in the `static-src` directory.
 
-1. `cd static-src`
-1. `npm install`
-1. `npm run build`
+```
+cd static-src
+npm install
+npm run build
+```
 
 ### Server
 
-In the project rool:
+In the project root:
 
 ```
 CGO_ENABLED=1 go build cmd/swankyindex/main.go
