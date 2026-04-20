@@ -1,0 +1,103 @@
+name: Release Artifacts
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  varinit:
+    name: Define workflow variables
+    permissions: {}
+    runs-on: &ubuntux64 ubuntu-24.04
+    outputs:
+      TAG_NAME: ${{ steps.var.outputs.tag }}
+      ZIP_NAME: ${{ steps.var.outputs.zip }}
+    steps:
+      - name: Define image variables
+        id: var
+        run: |
+          raw_tag="${GITHUB_REF##*/}"
+          tag="${raw_tag#v}"  # Remove leading "v" if present
+          repo_name="${{ github.event.repository.name }}"
+          echo "TAG_NAME=$tag" >> $GITHUB_OUTPUT
+          echo "ZIP_NAME=${repo_name}_${tag}_${{ matrix.arch }}.zip" >> $GITHUB_OUTPUT
+
+
+  build-static:
+    needs:
+      - varinit
+    runs-on: *ubuntux64
+    permissions:
+      contents: read
+    env:
+      TAG_NAME: ${{ needs.varinit.outputs.TAG_NAME }}
+    steps:
+      - name: Check out the repository
+        uses: &checkout actions/checkout@v6
+      
+      - name: Install dependencies
+        run: npm --prefix ./static-src/ ci
+
+      - name: Build
+        run: npm --prefix ./static-src/ run build
+
+      - name: Cleanup empty directories
+        run: find ./static -empty -type d -delete
+      
+      - name: Save static resources
+        uses: actions/upload-artifact@v7
+        with:
+          name: static_${{ env.TAG_NAME }}
+          path: static
+          retention-days: 1
+          include-hidden-files: false
+          archive: true
+
+
+  build-binary:
+    needs:
+      - varinit
+    strategy:
+      matrix:
+        arch:
+          - x64
+          - arm64
+        include:
+          - arch: x64
+            os: *ubuntux64
+          - arch: arm64
+            os: ubuntu-24.04-arm
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: write
+    env:
+      TAG_NAME: ${{ needs.varinit.outputs.TAG_NAME }}
+      ZIP_NAME: ${{ needs.varinit.outputs.ZIP_NAME }}
+    steps:
+      - name: Check out the repository
+        uses: *checkout
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.mod'
+      
+      - name: Build binary
+        run: |
+          CGO_ENABLED=1 go build cmd/swankyindex/main.go
+      
+      - name: Get static files
+        uses: actions/download-artifact@v8
+        with:
+          name: static_${{ env.TAG_NAME }}
+          path: dist/
+
+      - name: Create zip of the repository
+        run: |
+          mv main dist/swankyindex
+          zip -r "${{ env.ZIP_NAME }}" dist/
+
+      - name: Upload zip as a release asset
+        uses: softprops/action-gh-release@v3
+        with:
+          files: ${{ env.ZIP_NAME }}
