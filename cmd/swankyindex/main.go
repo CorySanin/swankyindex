@@ -51,6 +51,9 @@ func main() {
 	mux.Handle("/.static/", http.StripPrefix("/.static", notFoundOnDir(http.FileServer(http.Dir("./static")))))
 	mux.HandleFunc(web.ApiPath, server.ApiHandler)
 	mux.HandleFunc("/", server.Handler)
+	if *conf.PrometheusPort == 0 {
+		mux.Handle(*conf.PrometheusPath, server.MetricsHandler())
+	}
 
 	httpServer := &http.Server{
 		Addr:    fmt.Sprintf(":%d", *conf.Port),

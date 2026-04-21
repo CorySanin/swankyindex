@@ -14,6 +14,8 @@ import (
 
 type Conf struct {
 	Port               *int             `yaml:"port"`
+	PrometheusPort     *int             `yaml:"prometheusPort"`
+	PrometheusPath     *string          `yaml:"prometheusPath"`
 	Title              *string          `yaml:"title"`
 	Storage            *string          `yaml:"storage"`
 	Directory          *string          `yaml:"directory"`
@@ -50,6 +52,8 @@ func Config() Conf {
 		Title:              populatePrimitive(cfg.Title, "TITLE", new(string("Index of "))),
 		Storage:            populatePrimitive(cfg.Storage, "STORAGE", new(string(filepath.Join("data", "downloadcount.db")))),
 		Port:               populatePrimitive(cfg.Port, "PORT", new(int(8080))),
+		PrometheusPort:     populatePrimitive(cfg.PrometheusPort, "PROMPORT", new(int(-1))),
+		PrometheusPath:     populatePrimitive(cfg.PrometheusPath, "PROMPATH", new(string("/metrics"))),
 		Directory:          NormalizePath(*populatePrimitive(cfg.Directory, "DIRECTORY", new(string("/srv/http/")))),
 		Icons:              populatePrimitive(cfg.Icons, "ICONS", new(bool(true))),
 		ShowDownloads:      populatePrimitive(cfg.ShowDownloads, "SHOWDOWNLOADS", new(bool(true))),
