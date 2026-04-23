@@ -51,8 +51,20 @@ func main() {
 	mux.Handle("/.static/", http.StripPrefix("/.static", notFoundOnDir(http.FileServer(http.Dir("./static")))))
 	mux.HandleFunc(web.ApiPath, server.ApiHandler)
 	mux.HandleFunc("/", server.Handler)
-	if *conf.PrometheusPort == 0 {
+	var metricsServer *http.Server = nil
+	if *conf.PrometheusPort == 0 || *conf.PrometheusPort == *conf.Port {
 		mux.Handle(*conf.PrometheusPath, server.MetricsHandler())
+	} else if *conf.PrometheusPort > 0 {
+		metricsServer = &http.Server{
+			Addr:    fmt.Sprintf(":%d", *conf.PrometheusPort),
+			Handler: server.MetricsHandler(),
+		}
+		go func() {
+			fmt.Printf("Prometheus client listening on port %d\n", *conf.PrometheusPort)
+			if err := metricsServer.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+				log.Fatalf("listen: %s\n", err)
+			}
+		}()
 	}
 
 	httpServer := &http.Server{
@@ -75,6 +87,11 @@ func main() {
 
 	if err := httpServer.Shutdown(shutdownCtx); err != nil {
 		log.Fatalf("Server forced to shutdown: %v", err)
+	}
+	if metricsServer != nil {
+		if err := metricsServer.Shutdown(shutdownCtx); err != nil {
+			log.Fatalf("Metrics server forced to shutdown: %v", err)
+		}
 	}
 
 	wg.Wait()
