@@ -36,7 +36,7 @@ func (s *Server) MetricsHandler() http.Handler {
 func NewDatabaseCollector(cfg *config.Conf, st *storage.Storage) *DatabaseCollector {
 	return &DatabaseCollector{
 		downloadTotals: prometheus.NewDesc(
-			"app_download_totals",
+			"swanky_download_totals",
 			"Download counts of all files",
 			[]string{"filename", "access_domain"}, nil,
 		),
